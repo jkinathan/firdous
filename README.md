@@ -1,4 +1,5 @@
 # firdous
+:octocat:
 #### firdous is a plumbing inventory management web application built in django
 
 ### SETTING UP
@@ -20,4 +21,4 @@ cd into the project folder
 ## Run the application
 ``` python3 manage.py runserver ```
 
-#### HAPPY CODING !!!
+#### HAPPY CODING !!! :sunglasses:
