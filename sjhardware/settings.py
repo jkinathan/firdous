@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django.contrib.sites',
     'allauth',
-    'allauth.account'
+    'allauth.account',
+    'rest_framework',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
