@@ -1,5 +1,4 @@
-# firdous
-:octocat:
+# firdous :octocat:
 #### firdous is a plumbing inventory management web application built in django
 
 ### SETTING UP
