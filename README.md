@@ -18,4 +18,6 @@ cd into the project folder
 ``` pip install -r requirements.txt ```
 
 ## Run the application
-``` python3 manage.py runserver
+``` python3 manage.py runserver ```
+
+#### HAPPY CODING !!!
