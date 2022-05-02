@@ -40,7 +40,7 @@ class Stock(models.Model):
         verbose_name_plural = 'Stocks'
         
     def picture_tag(self):
-        return mark_safe('<img src="{}" height="50"/>'.format(self.picture.url))
+        return mark_safe('<img src="{}" height="50"/>'.format(self.inventoryImage.url))
     picture_tag.short_description = 'Picture'
        
     # def serialize(self):
