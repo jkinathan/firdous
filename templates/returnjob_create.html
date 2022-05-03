@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Create Return Job</h4> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="white-box">
+                    <h3 class="box-title">New Return Job</h3>                   
+                    <form action="{% url 'createreturnjobs' %}" method="POST">
+                    {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label for="name">Return Job Name:</label>
+                            <input type="text" name="rjname" class="form-control "id="rjname" placeholder="Enter return job name">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Customer Name:</label>
+                            <select class="selectpicker form-control" name="name" id="namec">
+                            {% for customer in customers %}
+                                <option value="{{ customer.id }}">{{ customer.name }}</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Complaint:</label>
+                            <textarea id="w3review" name="complaint" rows="4" cols="50" class="form-control">
+                            </textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Part Number:</label>
+                            <input type="text" name="partnumber" class="form-control "id="partnumber" placeholder="Enter Part number">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Date done:</label>
+                            <div class='input-group date' id='datetimepicker12'>
+                                <input type='datetime-local' class="form-control" id="datedone" name="datedone" />
+                                {% comment %} <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span> {% endcomment %}
+                            </div>
+                           
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status:</label>
+                            <select class="selectpicker form-control" name="statusr" id="statusr">
+                            
+                                <option value="Complete">Complete</option>
+                                <option value="Incomplete">Incomplete</option>
+                            
+                            </select>
+                        </div>
+                        
+                        
+                        <button type="submit" name="createreturnjob" class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        
+{% endblock %}

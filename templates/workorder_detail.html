@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Update WorkOrder</h4> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="white-box">
+                    <h3 class="box-title">Update WorkOrder</h3>                   
+                    <form action="{% url 'workorderdetail' workorder.id %}" method="POST">
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name">Order name</label>
+                            <input type="text" class="form-control" id="ordername" placeholder="{{ workorder.ordername }}" value="{{ workorder.ordername }}" name="ordername">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Customer Name:</label>
+                            <select class="selectpicker form-control" id="namec" name="name">
+                                <option value="{{ workorder.customer_name.id }}" selected="selected">{{ workorder.customer_name  }}</option>
+                                {% for customer in customers %}
+                                <option value="{{ customer.id }}">{{ customer.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="jobtype">Job Type:</label>
+                            <select class="selectpicker form-control" id="jobtype" name="jobtype">
+                                <option value="{{ workorder.jobtype.id }}" selected="selected">{{ workorder.jobtype  }}</option>
+                                {% for jobtype in jobtypes %}
+                                <option value="{{ jobtype.id }}">{{ jobtype.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="technician">Technician:</label>
+                            <select class="selectpicker form-control" id="technician" name="technician">
+                                <option value="{{ workorder.technician.id }}" selected="selected">{{ workorder.technician  }}</option>
+                                {% for tech in technicians %}
+                                <option value="{{ tech.id }}">{{ tech.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Order Status:</label>
+                            <select class="selectpicker form-control" name="status" id="status">
+                                <option value="{{ workorder.order_status }}" selected="selected">{{ workorder.order_status  }}</option>
+                                <option value="Complete">Complete</option>
+                                <option value="Incomplete">Incomplete</option>
+                            
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="amount">Amount Paid:</label>
+                            <input type="text" class="form-control" id="amount" placeholder="{{ workorder.amount_paid }}" value="{{ workorder.amount_paid }}" name="amount">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="balance">Balance:</label>
+                            <input type="text" class="form-control" id="balance" placeholder="{{ workorder.balance }}" value="{{ workorder.balance }}" name="balance">
+                        </div>
+
+                        <button type="submit" name="editworkorder" class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

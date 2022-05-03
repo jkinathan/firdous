@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Customer Detail</h4> 
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="white-box">
+                    
+                    <h3 class="box-title">Customer Detail</h3>                   
+                    <form action="{% url 'customerdetail' customer.id %}" method="POST">
+                    {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name">Full Name:</label>
+                            <input type="text" class="form-control" id="name" placeholder="{{ customer.name }}" name="name" value="{{ customer.name }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Telephone Number:</label>
+                            <input type="text" class="form-control" id="number" placeholder="{{ customer.number }}" name="number" value="{{ customer.number }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="inventorys">Inventory Purchased:</label>
+                            <select class="selectpicker form-control" id="inventory_purchased" name="inventory_purchased">
+                                <option value="{{ customer.inventory_purchased.id }}" selected="selected">{{ customer.inventory_purchased  }}</option>
+                                {% for invent in inventorys %}
+                                <option value="{{ invent.id }}">{{ invent.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="quantity">Quantity:</label>
+                            <input type="number"  min="1" max="15" class="form-control" id="quantity" placeholder="{{ customer.quantity }}" name="quantity" value="{{ customer.quantity }}">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Amount Paid:</label>
+                            <input type="text" class="form-control" id="amount" placeholder="{{ customer.amount }}" name="amount" value="{{ customer.amount }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="balance">Balance:</label>
+                            <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ customer.balance }}" name="balance" value="{{ customer.balance }}">
+                        </div>
+                        
+                        <button type="submit" name="editcustomer" class="btn btn-warning">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

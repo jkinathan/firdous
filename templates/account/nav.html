@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'plugins/images/favicon.png' %}">
+    <title>SJ and Firdous Hardware Management System </title>
+    <!-- Bootstrap Core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    {% comment %} <link href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet"> {% endcomment %}
+    <!-- Menu CSS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+</head>
+
+<body class="fix-header">
+    
+    <!-- ============================================================== -->
+    <!-- Wrapper -->
+    <!-- ============================================================== -->
+    <div id="wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <nav class="navbar navbar-default navbar-static-top m-b-0" style="background: green;">
+
+        </nav>
+        <!-- ============================================================== -->
+        <!-- Page Content -->
+        <!-- ============================================================== -->
+            
+            {% block content %}
+            
+
+            {% endblock content %}
+ 
+            </div>
+            <!-- /.container-fluid -->
+            <footer class="footer text-center"> 2022 &copy;SJ and Firdous Hardware Management System </footer>
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page Content -->
+        <!-- ============================================================== -->
+    </div>
+    
+    {% comment %} <script src="{% static 'plugins/bower_components/jquery/dist/jquery.min.js' %}"></script> {% endcomment %}
+    <!-- Bootstrap Core JavaScript --> 
+    <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+
+</body>
+
+</html>

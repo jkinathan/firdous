@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Inventory</h4> 
+            </div>
+        </div>
+        <!--row -->
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="white-box">
+                    
+                    <h3 class="box-title">Inventory Details</h3>
+             
+                    <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Image</th>
+                                <th>Type</th>
+                                <th>Engine</th>
+
+                                <th>stamping_number</th>
+                                <th>part_number</th>
+                                <th>millimeter</th>
+                                <th>cut</th>
+                                <th>calibration</th>
+                                <th>direction_side</th>
+                                <th>holes</th>
+                                <th>voltage</th>
+
+                                <th>Location</th>
+                                <th>Quantity</th>
+                                <th>Price (UGX)</th>
+                                <th>Date</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for inv in inventorys %}
+                            <tr>
+                                <td><b>{{ inv.name }}</b></td>
+                                <td>{{ inv.picture_tag }}</td>
+                                <td>{{ inv.inventory_Type }}</td>
+                                <td>{{ inv.engine }}</td>
+
+                                <td>{{ inv.stamping_number }}</td>
+                                <td>{{ inv.part_number }}</td>
+                                <td>{{ inv.millimeter }}</td>
+                                <td>{{ inv.cut }}</td>
+                                <td>{{ inv.calibration }}</td>
+                                <td>{{ inv.direction_side }}</td>
+                                <td>{{ inv.holes }}</td>
+                                <td>{{ inv.voltage }}</td>
+
+                                <td>{{ inv.location }}</td>
+                                <td>{{ inv.quantity }}</td>
+                                <td>{{ inv.price }}</td>
+                                <td>{{ inv.created_at }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
