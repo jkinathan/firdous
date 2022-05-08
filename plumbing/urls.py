@@ -7,7 +7,7 @@ urlpatterns = [
      #path('api/data', views.get_data, name='api_data'),
      #path('api/chart/data', ChartData.as_view(), name='chart_data'),
 
-     path('inventory/', views.inventory, name='inventory'),
+     path('stocks/', views.inventory, name='stocks'),
      #path('technicians/', views.technician, name='technicians'),
      path('workorders/', views.workorder, name='workorders'),
      path('returnjobs/', views.ReturnJobo, name='returnjobs'),
@@ -21,6 +21,6 @@ urlpatterns = [
 
      path('returnjoborderdetail/<int:pk>', views.Returnjobdetailfunc, name="returnjobdetail"),
 
-     #path('autocompleter', views.Autoguy, name='autocomplete'),
+     path('reportpdf', views.ReportPdf, name='reportpdf'),
 
 ]

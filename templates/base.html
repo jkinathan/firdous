@@ -108,7 +108,54 @@
                     <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">UNITED DIESEL</span></h3>
                 </div>
 
+                <ul class="nav" id="side-menu">
+                    {% comment %} <li>
+                    <span>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{message.tags}}" role="alert">
+                                {{ message|safe }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    </span>
+                    </li>
+                     {% endcomment %}
+                    <li style="padding: 70px 0 0;">
+                        <a href="/" class="waves-effect"><i class="fa fa-clock-o fa-fw" aria-hidden="true"></i>Dashboard</a>
+                    </li>
+                    
+                    <li>
+                        <a href="{% url 'index' %}" class="waves-effect"><i class="fa fa-table fa-fw" aria-hidden="true"></i>Customers</a>
+                    </li>
+                    {% comment %} <li>
+                        <a href="{% url 'createcustomer' %}"class="waves-effect"><i class="fa fa-table fa-fw" aria-hidden="true"></i>Add Customer</a>
+                    </li> {% endcomment %}
+                    </li>
+                    <li>
+                        <a href="{% url 'stocks' %}" class="waves-effect"><i class="fa fa-font fa-fw" aria-hidden="true"></i>Stocks</a>
+                    </li>
+                    {% comment %} <li>
+                        <a href="{% url 'workorders' %}" class="waves-effect"><i class="fa fa-globe fa-fw" aria-hidden="true"></i>Work Orders</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'createworkorder' %}" class="waves-effect"><i class="fa fa-globe fa-fw" aria-hidden="true"></i>Create Work Order</a>
+                    </li> {% endcomment %}
 
+                    {% comment %} <li>
+                        <a href="{% url 'returnjobs' %}" class="waves-effect"><i class="fa fa-tasks fa-fw" aria-hidden="true"></i>Return Jobs</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'createreturnjobs' %}" class="waves-effect"><i class="fa fa-tasks fa-fw" aria-hidden="true"></i>Create Return Job</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'technicians' %}" class="waves-effect"><i class="fa fa-wrench fa-fw" aria-hidden="true"></i>Technicians</a>
+                    </li> {% endcomment %}
+                    <li>
+                        <a href="{% url 'account_logout' %}" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i>Log out</a>
+                    </li>
+                </ul>
                
             </div>
             

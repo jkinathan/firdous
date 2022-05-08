@@ -1,14 +1,65 @@
 from django.shortcuts import render
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+from .models import Customer,Stock,Vendor
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required
 def index(request):
-    return render(request,'index.html')
-# @login_required
+    if request.user.is_staff:
+        customers = Customer.objects.all()
+        stocks = Stock.objects.all()
+        customercount = Customer.objects.all().count()
+        stockscount = Stock.objects.all().count()
+        vendorcount = Vendor.objects.all().count()
+        context ={'customers':customers,
+              'customercount':customercount,
+              'stockscount':stockscount,
+              'vendorcount':vendorcount
+              }
+    # customers = Customer.objects.filter(addedby=request.user)
+    customers = Customer.objects.all()
+    # print(customers)
+    stocks = Stock.objects.all()
+    for stockProfit in stocks:
+        percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice) * 100
+
+    print("-----------------------Blaaa_________________")
+    print(percstockProfit)
+    customercount = Customer.objects.all().count()
+    stockscount = Stock.objects.all().count()
+    vendorcount = Vendor.objects.all().count()
+    context ={'customers':customers,
+              'customercount':customercount,
+              'stockscount':stockscount,
+              'vendorcount':vendorcount,
+              'percstockProfit':percstockProfit,
+              }
+    
+    for stock in stocks:
+        #print(inventory)
+        if request.user.is_staff and stock.piecesQuantity < 1 :
+            #print(inventory)
+            messages.warning(request, stock.inventoryPart+' are running low in stock Please add more!!')
+            return render(request, 'index.html', context)
+        
+    return render(request,'index.html',context)
+
+@login_required
 def inventory(request):
-    # inventorys = Inventory.objects.all()
-    # context ={'inventorys':inventorys
-    #           }
-    return render(request, 'inventory.html')
+    stocks = Stock.objects.all()
+    for stockProfit in stocks:
+        percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice) 
+
+    context ={'stocks':stocks,
+              'percstockProfit':percstockProfit
+              }
+    return render(request, 'inventory.html', context)
 
 
 # @login_required
@@ -221,3 +272,50 @@ def ReturnJobo(request):
     # context ={'returnjobs':returnjobs
     #           }
     return render(request, 'returnjobs.html')
+
+
+def ReportPdf(request):
+    # creating a byteStream Buffer
+    buf = io.BytesIO()
+    # create a canvas 
+    c = canvas.Canvas(buf,pagesize=letter, bottomup=0)   
+    # create a text object
+    textob = c.beginText()
+    textob.setTextOrigin(inch, inch)
+    textob.setFont("Helvetica", 14)
+
+
+    # Adding some lines of text
+    # lines = [
+    #     "This is line 1",
+    #     "This is line 2",
+    #     "This is line 3"
+    # ]
+
+    # Designate the model
+    customer = Customer.objects.all()
+
+    # Create blank list
+    lines = []
+
+    for customer in customer:
+        lines.append(customer.customerName)
+        lines.append(customer.contact)
+        lines.append(customer.item_purchased)
+        lines.append(customer.quantity)
+        lines.append("-----------------")
+
+    # loop 
+    for line in lines:
+        textob.textLine(line)
+
+    # Finish up
+    c.drawText(textob)
+    c.showPage()
+    c.save()
+    buf.seek(0)
+
+    # return 
+    return FileResponse(buf, as_attachment=True, filename='report.pdf')
+
+

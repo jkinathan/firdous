@@ -18,21 +18,29 @@ class Vendor(models.Model):
         return self.name
 class Stock(models.Model):
 
-    measure = (
-        ('Cartons', 'Cartons'),
-        ('Pieces', 'Pieces'),
-    )
+    # measure = (
+    #     ('Cartons', 'Cartons'),
+    #     ('Pieces', 'Pieces'),
+    # )
     inventoryPart = models.CharField(max_length=200)
     inventoryImage = models.ImageField(null=True, blank=True,upload_to='images/')
     description = models.TextField(blank=True)
-    unitMeasure = models.CharField(max_length=100, choices=measure,blank=True)
+    # unitMeasure = models.CharField(max_length=100, choices=measure,blank=True)
+    cartonQuantity = models.IntegerField(default=1, blank=True)
+    piecesQuantity = models.IntegerField(default=1, blank=True)
     costPrice = models.FloatField()
     sellingPrice = models.FloatField()
-    percentageProfit = models.CharField(max_length=150)
+    percentageProfit = models.CharField(max_length=150, blank=True)
     stockValue = models.CharField(max_length=150)
-    quantity = models.IntegerField()
+    # quantity = models.IntegerField()
     vendorSupplied = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # Calcuting percentageprofit
+    def calculate_percentageProfit(self):
+        #self.aggregate(sum=Sum('installment_amount'))
+        percentageProfit = ((self.sellingPrice - self.costPrice) / self.costPrice) * 100
+        return percentageProfit
 
     class Meta:
         ordering = ["-inventoryPart"]
@@ -43,6 +51,10 @@ class Stock(models.Model):
         return mark_safe('<img src="{}" height="50"/>'.format(self.inventoryImage.url))
     picture_tag.short_description = 'Picture'
        
+    # Saving percentageProfit
+    def save(self,*args, **kwargs):
+        self.percentageProfit = self.calculate_percentageProfit()
+        super().save(*args, **kwargs)
     # def serialize(self):
     #     return self.__dict__
     def __str__(self):
@@ -55,6 +67,10 @@ class Customer(models.Model):
         ('Pending', 'Pending'),
         ('Incomplete', 'Incomplete'),
     )
+    shopOptions = (
+        ('firdous', 'firdous'),
+        ('sj', 'sj'),
+    )
     customerName = models.CharField(max_length=200)
     contact = models.CharField(max_length=150, blank=True)
     item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
@@ -64,7 +80,9 @@ class Customer(models.Model):
     balance = models.FloatField()
     order_status = models.CharField(max_length=20, choices=MY_CHOICES)
     modeOfPayment = models.CharField(max_length=100)
+    purchased_From = models.CharField(default='sj', max_length=20, choices=shopOptions)
     date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+    due_date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"),blank=True)
     addedby = models.ForeignKey(User,on_delete=models.PROTECT, default=1)
     
     def get_absolute_url(self):
