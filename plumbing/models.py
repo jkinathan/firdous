@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from pyexpat import model
 from django.db import models
 from django.utils import timezone
@@ -71,6 +72,10 @@ class Customer(models.Model):
         ('firdous', 'firdous'),
         ('sj', 'sj'),
     )
+    paymentMode = (
+        ('Bank', 'Bank'),
+        ('Cash', 'Cash'),
+    )
     customerName = models.CharField(max_length=200)
     contact = models.CharField(max_length=150, blank=True)
     item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
@@ -79,14 +84,40 @@ class Customer(models.Model):
     totalAmountPaid = models.FloatField()
     balance = models.FloatField()
     order_status = models.CharField(max_length=20, choices=MY_CHOICES)
-    modeOfPayment = models.CharField(max_length=100)
+    modeOfPayment = models.CharField(max_length=100, choices=paymentMode)
     purchased_From = models.CharField(default='sj', max_length=20, choices=shopOptions)
     date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
-    due_date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"),blank=True)
+    due_date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"),blank=True,null=True)
     addedby = models.ForeignKey(User,on_delete=models.PROTECT, default=1)
+
+    # Calcuting balance
+    def calculate_balance(self):
+        balance = (self.item_purchased.sellingPrice*self.quantity - self.totalAmountPaid) 
+        return balance
+    
+    # Updating Order Status
+    def update_Order_status(self):
+        if(self.balance < 0.5):
+            order_status = 'Complete'
+        else:
+            order_status = 'Pending'
+        return order_status
+    
+    # Updating Due date
+    def update_Due_Date(self):
+        if(self.balance < 0.5):
+            self.due_date = None
+        return self.due_date
     
     def get_absolute_url(self):
         return reverse("customerdetail", kwargs={"pk": self.pk})
+
+    # Saving percentageProfit
+    def save(self,*args, **kwargs):
+        self.balance = self.calculate_balance()
+        self.order_status = self.update_Order_status()
+        self.update_Due_Date = self.update_Due_Date()
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return self.customerName

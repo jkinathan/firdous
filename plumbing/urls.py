@@ -21,6 +21,6 @@ urlpatterns = [
 
      path('returnjoborderdetail/<int:pk>', views.Returnjobdetailfunc, name="returnjobdetail"),
 
-     path('reportpdf', views.ReportPdf, name='reportpdf'),
+     # path('reportpdf', views.ReportPdf, name='reportpdf'),
 
 ]

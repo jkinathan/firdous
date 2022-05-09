@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from django.http import FileResponse
-import io
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter
+# from django.http import FileResponse
+# import io
+# from reportlab.pdfgen import canvas
+# from reportlab.lib.units import inch
+# from reportlab.lib.pagesizes import letter
 from .models import Customer,Stock,Vendor
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -274,15 +274,15 @@ def ReturnJobo(request):
     return render(request, 'returnjobs.html')
 
 
-def ReportPdf(request):
-    # creating a byteStream Buffer
-    buf = io.BytesIO()
-    # create a canvas 
-    c = canvas.Canvas(buf,pagesize=letter, bottomup=0)   
-    # create a text object
-    textob = c.beginText()
-    textob.setTextOrigin(inch, inch)
-    textob.setFont("Helvetica", 14)
+# def ReportPdf(request):
+#     # creating a byteStream Buffer
+#     buf = io.BytesIO()
+#     # create a canvas 
+#     c = canvas.Canvas(buf,pagesize=letter, bottomup=0)   
+#     # create a text object
+#     textob = c.beginText()
+#     textob.setTextOrigin(inch, inch)
+#     textob.setFont("Helvetica", 14)
 
 
     # Adding some lines of text
@@ -292,30 +292,30 @@ def ReportPdf(request):
     #     "This is line 3"
     # ]
 
-    # Designate the model
-    customer = Customer.objects.all()
+    # # Designate the model
+    # customer = Customer.objects.all()
 
-    # Create blank list
-    lines = []
+    # # Create blank list
+    # lines = []
 
-    for customer in customer:
-        lines.append(customer.customerName)
-        lines.append(customer.contact)
-        lines.append(customer.item_purchased)
-        lines.append(customer.quantity)
-        lines.append("-----------------")
+    # for customer in customer:
+    #     lines.append(customer.customerName)
+    #     lines.append(customer.contact)
+    #     lines.append(customer.item_purchased)
+    #     lines.append(customer.quantity)
+    #     lines.append("-----------------")
 
-    # loop 
-    for line in lines:
-        textob.textLine(line)
+    # # loop 
+    # for line in lines:
+    #     textob.textLine(line)
 
-    # Finish up
-    c.drawText(textob)
-    c.showPage()
-    c.save()
-    buf.seek(0)
+    # # Finish up
+    # c.drawText(textob)
+    # c.showPage()
+    # c.save()
+    # buf.seek(0)
 
-    # return 
-    return FileResponse(buf, as_attachment=True, filename='report.pdf')
+    # # return 
+    # return FileResponse(buf, as_attachment=True, filename='report.pdf')
 
 
