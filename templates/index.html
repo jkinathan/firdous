@@ -83,7 +83,11 @@
                                 <td>{{ customer.rate }}</td>
                                 <td>{{ customer.totalAmountPaid }}</td>
                                 <td>{{ customer.balance }}</td>
-                                <td>{{ customer.order_status }}</td>
+                                {% if customer.order_status == "Complete" %}
+                                    <td style="color:green">{{ customer.order_status }}</td>
+                                {% else %}
+                                    <td style="color:red">{{ customer.order_status }}</td>
+                                {% endif %}
                                 <td>{{ customer.modeOfPayment }}</td>
                                 <td>{{ customer.purchased_From }}</td>
                                 <td>{{ customer.due_date }}</td>
