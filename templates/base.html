@@ -76,6 +76,16 @@
                         </span>
                     </a>
                 </div>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    {% for notification in  user.notifications.unread %}
+                        <div>
+                          Message from <b>{{ notification.actor }}</b>
+                          <button class="dropdown-item" type="button">{{ notification.description }}</button>			
+                          </div>
+                          <div class="dropdown-divider"></div>
+                      {% endfor %}
+                  </div>
                 <!-- /Logo -->
                 <ul class="nav navbar-top-links navbar-right pull-right">
                     <li>
@@ -105,7 +115,7 @@
         <div class="navbar-default sidebar" role="navigation">
             <div class="sidebar-nav slimscrollsidebar">
                 <div class="sidebar-head">
-                    <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">UNITED DIESEL</span></h3>
+                    <h3><span class="fa-fw open-close"><i class="ti-close ti-menu"></i></span> <span class="hide-menu">Firdous</span></h3>
                 </div>
 
                 <ul class="nav" id="side-menu">

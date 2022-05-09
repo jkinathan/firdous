@@ -80,7 +80,6 @@ class Customer(models.Model):
     contact = models.CharField(max_length=150, blank=True)
     item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1,null=False)
-    rate = models.CharField(max_length=100)
     totalAmountPaid = models.FloatField()
     balance = models.FloatField()
     order_status = models.CharField(max_length=20, choices=MY_CHOICES)
