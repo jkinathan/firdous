@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 from django.shortcuts import render
 # from django.http import FileResponse
 # import io
@@ -7,6 +8,7 @@ from django.shortcuts import render
 from .models import Customer,Stock,Vendor
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from datetime import date
 
 # Create your views here.
 @login_required
@@ -46,6 +48,12 @@ def index(request):
         if request.user.is_staff and stock.piecesQuantity < 1 :
             #print(inventory)
             messages.warning(request, stock.inventoryPart+' are running low in stock Please add more!!')
+            return render(request, 'index.html', context)
+    
+    for customer in customers:
+        # if (customer.due_date )
+        if customer.is_past_due and customer.due_date != NULL:
+            messages.warning(request, customer.customerName+'\'s due date of '+customer.due_date.strftime("%Y-%m-%d")+ ' is past, please follow up and update!!')
             return render(request, 'index.html', context)
         
     return render(request,'index.html',context)

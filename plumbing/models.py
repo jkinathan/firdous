@@ -6,6 +6,8 @@ from django.utils.safestring import mark_safe
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.db.models.signals import post_save
+from datetime import datetime
+from django.utils.formats import localize
 # Create your models here.
 
 
@@ -110,6 +112,12 @@ class Customer(models.Model):
     
     def get_absolute_url(self):
         return reverse("customerdetail", kwargs={"pk": self.pk})
+
+    @property
+    def is_past_due(self):
+        if self.due_date:
+            # formatted_datetime = formats.date_format(date.today(), "%Y-%m-%d")
+            return datetime.now().strftime("%Y-%m-%d") > self.due_date.strftime("%Y-%m-%d")
 
     # Saving percentageProfit
     def save(self,*args, **kwargs):
