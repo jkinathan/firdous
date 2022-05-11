@@ -68,6 +68,76 @@ def inventory(request):
               'percstockProfit':percstockProfit
               }
     return render(request, 'inventory.html', context)
+@login_required
+def cash(request):
+    # stocks = Stock.objects.all()
+    # for stockProfit in stocks:
+    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
+    #
+    # context ={'stocks':stocks,
+    #           'percstockProfit':percstockProfit
+    #           }
+    return render(request, 'cash.html')
+
+@login_required
+def credit(request):
+    # stocks = Stock.objects.all()
+    # for stockProfit in stocks:
+    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
+    #
+    # context ={'stocks':stocks,
+    #           'percstockProfit':percstockProfit
+    #           }
+    return render(request, 'credit.html')
+def receive(request):
+    # stocks = Stock.objects.all()
+    # for stockProfit in stocks:
+    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
+    #
+    # context ={'stocks':stocks,
+    #           'percstockProfit':percstockProfit
+    #           }
+    return render(request, 'receive.html')
+
+def purchase(request):
+    # stocks = Stock.objects.all()
+    # for stockProfit in stocks:
+    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
+    #
+    # context ={'stocks':stocks,
+    #           'percstockProfit':percstockProfit
+    #           }
+    return render(request, 'purchase.html')
+
+def enterbills(request):
+    # stocks = Stock.objects.all()
+    # for stockProfit in stocks:
+    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
+    #
+    # context ={'stocks':stocks,
+    #           'percstockProfit':percstockProfit
+    #           }
+    return render(request, 'enterbills.html')
+
+def paybills(request):
+    # stocks = Stock.objects.all()
+    # for stockProfit in stocks:
+    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
+    #
+    # context ={'stocks':stocks,
+    #           'percstockProfit':percstockProfit
+    #           }
+    return render(request, 'paybills.html')
+
+def check(request):
+    # stocks = Stock.objects.all()
+    # for stockProfit in stocks:
+    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
+    #
+    # context ={'stocks':stocks,
+    #           'percstockProfit':percstockProfit
+    #           }
+    return render(request, 'check.html')
 
 
 # @login_required
