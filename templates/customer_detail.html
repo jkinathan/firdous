@@ -16,20 +16,20 @@
                     <form action="{% url 'customerdetail' customer.id %}" method="POST">
                     {% csrf_token %}
                         <div class="form-group">
-                            <label for="name">Full Name:</label>
-                            <input type="text" class="form-control" id="name" placeholder="{{ customer.name }}" name="name" value="{{ customer.name }}">
+                            <label for="name">Customer Name:</label>
+                            <input type="text" class="form-control" id="name" placeholder="{{ customer.customerName }}" name="name" value="{{ customer.name }}">
                         </div>
                         <div class="form-group">
-                            <label for="name">Telephone Number:</label>
-                            <input type="text" class="form-control" id="number" placeholder="{{ customer.number }}" name="number" value="{{ customer.number }}">
+                            <label for="name">Contact:</label>
+                            <input type="text" class="form-control" id="number" placeholder="{{ customer.contact }}" name="number" value="{{ customer.number }}">
                         </div>
 
                         <div class="form-group">
-                            <label for="inventorys">Inventory Purchased:</label>
+                            <label for="inventorys">Item Purchased:</label>
                             <select class="selectpicker form-control" id="inventory_purchased" name="inventory_purchased">
-                                <option value="{{ customer.inventory_purchased.id }}" selected="selected">{{ customer.inventory_purchased  }}</option>
-                                {% for invent in inventorys %}
-                                <option value="{{ invent.id }}">{{ invent.name }}</option>
+                                <option value="{{ customer.item_purchased.id }}" selected="selected">{{ customer.item_purchased  }}</option>
+                                {% for invent in stocks %}
+                                <option value="{{ invent.id }}">{{ invent.inventoryPart }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -40,13 +40,34 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="amount">Amount Paid:</label>
-                            <input type="text" class="form-control" id="amount" placeholder="{{ customer.amount }}" name="amount" value="{{ customer.amount }}">
+                            <label for="amount">Total Amount Paid:</label>
+                            <input type="text" class="form-control" id="amount" placeholder="{{ customer.totalAmountPaid }}" name="totalAmountPaid" value="{{ customer.totalAmountPaid }}">
                         </div>
                         <div class="form-group">
                             <label for="balance">Balance:</label>
                             <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ customer.balance }}" name="balance" value="{{ customer.balance }}">
                         </div>
+                        <div class="form-group">
+                            <label for="modofpayment">Mode of Payment:</label>
+                            <select class="selectpicker form-control" id="modpayment" name="modofpayment">
+                                <option value="Bank" selected="selected">Bank</option>
+                                <option value="Cash">Cash</option> 
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="purchasedfrom">Purchased From:</label>
+                            <select class="selectpicker form-control" id="purchasedFrom" name="purchased_From">
+                                <option value="firdous" selected="selected">Firdous</option>
+                                <option value="sj">SJ</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group date" id="datetimepicker1" data-target-input="nearest">Due-Date
+                            <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"/>
+                            <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                              <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                          </div>
                         
                         <button type="submit" name="editcustomer" class="btn btn-warning">Update</button>
                     </form>
