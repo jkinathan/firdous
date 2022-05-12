@@ -34,7 +34,6 @@ class Stock(models.Model):
     costPrice = models.FloatField()
     sellingPrice = models.FloatField()
     percentageProfit = models.CharField(max_length=150, blank=True)
-    stockValue = models.CharField(max_length=150)
     # quantity = models.IntegerField()
     vendorSupplied = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -119,7 +118,7 @@ class Customer(models.Model):
             # formatted_datetime = formats.date_format(date.today(), "%Y-%m-%d")
             return datetime.now().strftime("%Y-%m-%d") > self.due_date.strftime("%Y-%m-%d")
 
-    # Saving percentageProfit
+    # Saving Changes
     def save(self,*args, **kwargs):
         self.balance = self.calculate_balance()
         self.order_status = self.update_Order_status()
@@ -136,3 +135,72 @@ class ExchangeRate(models.Model):
 
     def __str__(self):
         return self.currencyName
+
+class CashInvoice(models.Model):
+
+    shopOptions = (
+        ('firdous', 'firdous'),
+        ('sj', 'sj'),
+    )
+
+    customerName = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    receiptNumber = models.CharField(max_length=150)
+    chooseAccount = models.CharField(default='sj', max_length=20, choices=shopOptions)
+    item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1,null=False)
+    totalAmountPaid = models.FloatField()
+    balance = models.FloatField()
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+
+    # Calcuting balance
+    def calculate_balance(self):
+        balance = (self.item_purchased.sellingPrice*self.quantity - self.totalAmountPaid) 
+        return balance
+    
+    # Saving changes
+    def save(self,*args, **kwargs):
+        self.balance = self.calculate_balance()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.customerName
+
+class PurchaseOrder(models.Model):
+    vendorName = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1,null=False)
+    totalAmountPaid = models.FloatField()
+    balance = models.FloatField()
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+
+    # Calcuting balance
+    def calculate_balance(self):
+        balance = (self.item_purchased.sellingPrice*self.quantity - self.totalAmountPaid) 
+        return balance
+    
+    # Saving changes
+    def save(self,*args, **kwargs):
+        self.balance = self.calculate_balance()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.vendorName
+
+class Cheques(models.Model):
+    shopOptions = (
+        ('firdous', 'firdous'),
+        ('sj', 'sj'),
+    )
+
+    chequeId = models.CharField(max_length=150)
+    chooseAccount = models.CharField(default='sj', max_length=20, choices=shopOptions)
+    expenseName = models.CharField(max_length=150)
+    expenseCost =  models.FloatField()
+    expenseQuantity = models.IntegerField(default=1,null=False)
+    totalAmountPaid = models.FloatField()
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+    def __str__(self):
+        return self.chequeId

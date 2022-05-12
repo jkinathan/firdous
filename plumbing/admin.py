@@ -15,3 +15,7 @@ admin.site.register(Vendor),
 admin.site.register(Stock,StockAdmin),
 admin.site.register(Customer, CustomerAdmin),
 admin.site.register(ExchangeRate),
+admin.site.register(CashInvoice),
+admin.site.register(PurchaseOrder),
+admin.site.register(Cheques),
+
