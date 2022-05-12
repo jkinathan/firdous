@@ -164,7 +164,7 @@ class CashInvoice(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.customerName
+        return str(self.customerName)
 
 class PurchaseOrder(models.Model):
     vendorName = models.ForeignKey(Vendor, on_delete=models.CASCADE)
@@ -186,7 +186,7 @@ class PurchaseOrder(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.vendorName
+        return str(self.vendorName)
 
 class Cheques(models.Model):
     shopOptions = (
