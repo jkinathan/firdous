@@ -202,5 +202,10 @@ class Cheques(models.Model):
     totalAmountPaid = models.FloatField()
     date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
 
+    class Meta:
+        ordering = ["-expenseName"]
+        verbose_name = 'Cheque'
+        verbose_name_plural = 'Cheques' 
+
     def __str__(self):
         return self.chequeId
