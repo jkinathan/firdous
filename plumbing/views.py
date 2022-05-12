@@ -5,7 +5,7 @@ from django.shortcuts import render
 # from reportlab.pdfgen import canvas
 # from reportlab.lib.units import inch
 # from reportlab.lib.pagesizes import letter
-from .models import Customer,Stock,Vendor
+from .models import Customer,Stock,Vendor,Cheques, CashInvoice,PurchaseOrder
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import date
@@ -68,76 +68,30 @@ def inventory(request):
               'percstockProfit':percstockProfit
               }
     return render(request, 'inventory.html', context)
+
 @login_required
 def cash(request):
-    # stocks = Stock.objects.all()
-    # for stockProfit in stocks:
-    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
-    #
-    # context ={'stocks':stocks,
-    #           'percstockProfit':percstockProfit
-    #           }
-    return render(request, 'cash.html')
+    cash = CashInvoice.objects.all()
+    
+    context ={'cash':cash
+              }
+    return render(request, 'cash.html',context)
 
 @login_required
-def credit(request):
-    # stocks = Stock.objects.all()
-    # for stockProfit in stocks:
-    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
-    #
-    # context ={'stocks':stocks,
-    #           'percstockProfit':percstockProfit
-    #           }
-    return render(request, 'credit.html')
-def receive(request):
-    # stocks = Stock.objects.all()
-    # for stockProfit in stocks:
-    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
-    #
-    # context ={'stocks':stocks,
-    #           'percstockProfit':percstockProfit
-    #           }
-    return render(request, 'receive.html')
-
 def purchase(request):
-    # stocks = Stock.objects.all()
-    # for stockProfit in stocks:
-    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
-    #
-    # context ={'stocks':stocks,
-    #           'percstockProfit':percstockProfit
-    #           }
-    return render(request, 'purchase.html')
+    purchase = PurchaseOrder.objects.all()
+    
+    context ={'purchase':purchase
+              }
+    return render(request, 'purchase.html',context)
 
-def enterbills(request):
-    # stocks = Stock.objects.all()
-    # for stockProfit in stocks:
-    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
-    #
-    # context ={'stocks':stocks,
-    #           'percstockProfit':percstockProfit
-    #           }
-    return render(request, 'enterbills.html')
-
-def paybills(request):
-    # stocks = Stock.objects.all()
-    # for stockProfit in stocks:
-    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
-    #
-    # context ={'stocks':stocks,
-    #           'percstockProfit':percstockProfit
-    #           }
-    return render(request, 'paybills.html')
-
+@login_required
 def check(request):
-    # stocks = Stock.objects.all()
-    # for stockProfit in stocks:
-    #     percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice)
-    #
-    # context ={'stocks':stocks,
-    #           'percstockProfit':percstockProfit
-    #           }
-    return render(request, 'check.html')
+    checks = Cheques.objects.all()
+    
+    context ={'checks':checks
+              }
+    return render(request, 'check.html',context)
 
 
 # @login_required

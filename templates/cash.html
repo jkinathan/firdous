@@ -22,32 +22,30 @@
                                 <th>Customer Name</th>
                                 <th>Receipt No.</th>
                                 <th>Choose Account</th>
-                                <th>Item Name</th>
+                                <th>Item Purchased</th>
                                 <th>Quantity</th>
-                                <th>Unit Price</th>
-                                <th>Total</th>
-                                <th>Grand Total</th>
+                                <th>Total Paid</th>
+                                <th>Balance</th>
+                                <th>date</th>
                             </tr>
                         </thead>
-<!--                        <tbody>-->
-<!--                        {% for inv in stocks %}-->
+                        <tbody>
+                        {% for inv in cash %}
 <!--                        -->
-<!--                            <tr>-->
-<!--                                <td><b>{{ inv.inventoryPart }}</b></td>-->
-<!--                                <td>{{ inv.picture_tag }}</td>-->
-<!--                                <td>{{ inv.description }}</td>-->
-<!--                                <td>{{ inv.cartonQuantity }}</td>-->
-<!--                                <td>{{ inv.piecesQuantity }}</td>-->
-<!--                                <td>{{ inv.costPrice }}</td>-->
-<!--                                <td>{{ inv.sellingPrice }}</td>-->
-<!--                                <td>{{ inv.percentageProfit |floatformat:"0" }} %</td>-->
-<!--                                <td>{{ inv.stockValue }}</td>-->
-<!--                                <td>{{ inv.vendorSupplied }}</td>-->
-<!--                                <td>{{ inv.created_at }}</td>-->
+                            <tr>
+                                <td><b>{{ inv.customerName }}</b></td>
+                                <td>{{ inv.receiptNumber }}</td>
+                                <td>{{ inv.chooseAccount }}</td>
+                                <td>{{ inv.item_purchased }}</td>
+                                <td>{{ inv.quantity }}</td>
+                                <td>{{ inv.totalAmountPaid }}</td>
+                                <td>{{ inv.balance }}</td>
+                                <td>{{ inv.date }}</td>
+                                
 <!--                                -->
-<!--                            </tr>-->
-<!--                        {% endfor %}-->
-<!--                        </tbody>-->
+                            </tr>
+                        {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             </div>

@@ -10,12 +10,18 @@ class StockAdmin(admin.ModelAdmin):
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['customerName','item_purchased','quantity', 'order_status', 'due_date']
     readonly_fields = ['balance','order_status']
+    
+class PurchaseOrderAdmin(admin.ModelAdmin):
+    readonly_fields = ['balance']
+
+class CashInvoiceAdmin(admin.ModelAdmin):
+    readonly_fields = ['balance']
 
 admin.site.register(Vendor),
 admin.site.register(Stock,StockAdmin),
 admin.site.register(Customer, CustomerAdmin),
 admin.site.register(ExchangeRate),
-admin.site.register(CashInvoice),
-admin.site.register(PurchaseOrder),
+admin.site.register(CashInvoice, CashInvoiceAdmin),
+admin.site.register(PurchaseOrder, PurchaseOrderAdmin),
 admin.site.register(Cheques),
 
