@@ -48,6 +48,47 @@
                     </ul>
                 </div>
             </div>
+            <div class="col-lg-4 col-sm-6 col-xs-10">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Grand Total</h3>
+                    <ul class="list-inline two-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">{{ grandtotal }}</span></li>
+                    </ul>
+                    <hr>
+                    <ul class="list-inline one-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Cash: <span class="counter text-purple">{{ cash }}</span></li>
+                    </ul>
+                    <ul class="list-inline one-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Bank: <span class="counter text-purple">{{ bank }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-10">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-bank fa-fw" aria-hidden="true"></i>Expenses</h3>
+                    <ul class="list-inline two-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ expensesTotal }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-10">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-user fa-fw" aria-hidden="true"></i>Debtors</h3>
+                    <ul class="list-inline two-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ customerDebtors }}</span></li>
+                    </ul>
+                    <hr>
+                    <ul class="list-inline one-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Total Owed: <span class="counter text-purple">{{ bank }}</span></li>
+                    </ul>
+                </div>
+            </div>
         </div>
         <!--/.row -->
         <!--row -->

@@ -28,7 +28,29 @@ def index(request):
     customers = Customer.objects.all()
     # print(customers)
     stocks = Stock.objects.all()
+    customerCash = Customer.objects.filter(modeOfPayment='Cash')
+    customerBank = Customer.objects.filter(modeOfPayment='Bank')
+    customerDebtors = Customer.objects.filter(order_status='Pending').count()
+    expenses = Cheques.objects.all()
+
+    grandtotal  = 0;
+    cash = 0;
+    bank = 0;
+    expensesTotal = 0;
+    debtorBal = 0;
+    for Total in customers:
+        grandtotal = grandtotal + Total.totalAmountPaid
+    for Total in customerCash:
+        cash = cash + Total.totalAmountPaid
+    for Total in customerBank:
+        bank = bank + Total.totalAmountPaid
+    for Total in expenses:
+        expensesTotal = expensesTotal + Total.totalAmountPaid
+    for debtBal in customers:
+        debtorBal = debtorBal + debtBal.balance
+
     for stockProfit in stocks:
+        
         percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice) * 100
 
     print("-----------------------Blaaa_________________")
@@ -40,7 +62,13 @@ def index(request):
               'customercount':customercount,
               'stockscount':stockscount,
               'vendorcount':vendorcount,
+              'grandtotal':grandtotal,
               'percstockProfit':percstockProfit,
+              'cash':cash,
+              'bank':bank,
+              'expensesTotal':expensesTotal,
+              'customerDebtors':customerDebtors,
+              'debtorBal':debtorBal,
               }
     
     for stock in stocks:
