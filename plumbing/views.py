@@ -13,6 +13,9 @@ from datetime import date
 # Create your views here.
 @login_required
 def index(request):
+    labels = []
+    data = []
+
     if request.user.is_staff:
         customers = Customer.objects.all()
         stocks = Stock.objects.all()
@@ -32,6 +35,15 @@ def index(request):
     customerBank = Customer.objects.filter(modeOfPayment='Bank')
     customerDebtors = Customer.objects.filter(order_status='Pending').count()
     expenses = Cheques.objects.all()
+
+
+    # Chart data
+    for custData in customers:
+        labels.append(custData.modeOfPayment)
+    for custDataCash in customerCash:
+        data.append(custDataCash.totalAmountPaid)
+    for custDataBank in customerBank:
+        data.append(custDataBank.totalAmountPaid)
 
     grandtotal  = 0;
     cash = 0;
@@ -69,6 +81,8 @@ def index(request):
               'expensesTotal':expensesTotal,
               'customerDebtors':customerDebtors,
               'debtorBal':debtorBal,
+              'labels': labels,
+              'data': data,
               }
     
     for stock in stocks:
