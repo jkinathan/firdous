@@ -50,6 +50,7 @@ def index(request):
     bank = 0;
     expensesTotal = 0;
     debtorBal = 0;
+    accountBalance = 0;
     for Total in customers:
         grandtotal = grandtotal + Total.totalAmountPaid
     for Total in customerCash:
@@ -60,7 +61,7 @@ def index(request):
         expensesTotal = expensesTotal + Total.totalAmountPaid
     for debtBal in customers:
         debtorBal = debtorBal + debtBal.balance
-
+    
     for stockProfit in stocks:
         
         percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice) * 100
@@ -70,6 +71,9 @@ def index(request):
     customercount = Customer.objects.all().count()
     stockscount = Stock.objects.all().count()
     vendorcount = Vendor.objects.all().count()
+
+    accountBalance = grandtotal - expensesTotal
+
     context ={'customers':customers,
               'customercount':customercount,
               'stockscount':stockscount,
@@ -81,6 +85,7 @@ def index(request):
               'expensesTotal':expensesTotal,
               'customerDebtors':customerDebtors,
               'debtorBal':debtorBal,
+              'accoutnBalance': accountBalance,
               'labels': labels,
               'data': data,
               }

@@ -17,11 +17,14 @@ class PurchaseOrderAdmin(admin.ModelAdmin):
 class CashInvoiceAdmin(admin.ModelAdmin):
     readonly_fields = ['balance']
 
+class ChequesAdmin(admin.ModelAdmin):
+    readonly_fields = ['balance']
+
 admin.site.register(Vendor),
 admin.site.register(Stock,StockAdmin),
 admin.site.register(Customer, CustomerAdmin),
 admin.site.register(ExchangeRate),
 admin.site.register(CashInvoice, CashInvoiceAdmin),
 admin.site.register(PurchaseOrder, PurchaseOrderAdmin),
-admin.site.register(Cheques),
+admin.site.register(Cheques,ChequesAdmin),
 

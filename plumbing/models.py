@@ -200,12 +200,22 @@ class Cheques(models.Model):
     expenseCost =  models.FloatField()
     expenseQuantity = models.IntegerField(default=1,null=False)
     totalAmountPaid = models.FloatField()
+    balance = models.FloatField(default=0.0)
     date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
 
     class Meta:
         ordering = ["-expenseName"]
         verbose_name = 'Cheque'
         verbose_name_plural = 'Cheques' 
+        
+    # Calcuting balance
+    def calculate_balance(self):
+        balance = (self.expenseCost*self.expenseQuantity - self.totalAmountPaid) 
+        return balance
+
+    def save(self,*args, **kwargs):
+        self.balance = self.calculate_balance()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.chequeId
