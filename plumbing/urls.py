@@ -9,6 +9,9 @@ urlpatterns = [
 
      path('stocks/', views.inventory, name='stocks'),
      path('cash/', views.cash, name='cash'),
+     path('payable/', views.payable, name='payable'),
+     path('transfer/', views.transfer, name='transfer'),
+     path('statistics/', views.statistics, name='statistics'),
      # path('credit/', views.credit, name='credit'),
      # path('receive/', views.receive, name='receive'),
      path('purchase/', views.purchase, name='purchase'),

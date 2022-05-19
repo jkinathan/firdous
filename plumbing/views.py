@@ -141,6 +141,28 @@ def check(request):
     return render(request, 'check.html',context)
 
 
+@login_required
+def payable(request):
+    # checks = Cheques.objects.all()
+    #
+    # context = {'checks': checks
+    #            }
+    return render(request, 'payable.html')
+
+@login_required
+def transfer(request):
+    # checks = Cheques.objects.all()
+    #
+    # context = {'checks': checks
+    #            }
+    return render(request, 'transfer.html')
+@login_required
+def statistics(request):
+    # checks = Cheques.objects.all()
+    #
+    # context = {'checks': checks
+    #            }
+    return render(request, 'statistics.html')
 # @login_required
 def Createcustomer(request):
     # customer = Customer()
