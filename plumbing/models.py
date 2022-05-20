@@ -189,6 +189,7 @@ class PurchaseOrder(models.Model):
         return str(self.vendorName)
 
 class Cheques(models.Model):
+
     shopOptions = (
         ('firdous', 'firdous'),
         ('sj', 'sj'),
@@ -219,3 +220,15 @@ class Cheques(models.Model):
 
     def __str__(self):
         return self.chequeId
+
+
+class Payable(models.Model):
+    vendorSupplied = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    item_supplied = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    totalAmountPaid = models.FloatField()
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+    def __str__(self):
+        return str(self.vendorSupplied)
+
+
