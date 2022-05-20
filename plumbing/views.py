@@ -105,6 +105,45 @@ def index(request):
         
     return render(request,'index.html',context)
 
+def customers(request):
+    
+    if request.user.is_staff:
+        customers = Customer.objects.all()
+        stocks = Stock.objects.all()
+        customercount = Customer.objects.all().count()
+        stockscount = Stock.objects.all().count()
+        vendorcount = Vendor.objects.all().count()
+        context ={'customers':customers,
+              'customercount':customercount,
+              'stockscount':stockscount,
+              'vendorcount':vendorcount
+              }
+    # customers = Customer.objects.filter(addedby=request.user)
+    customers = Customer.objects.all()
+    # print(customers)
+    
+    customercount = Customer.objects.all().count()
+    
+    context ={'customers':customers,
+              'customercount':customercount,
+              }
+    
+    for stock in stocks:
+        #print(inventory)
+        if request.user.is_staff and stock.piecesQuantity < 1 :
+            #print(inventory)
+            messages.warning(request, stock.inventoryPart+' are running low in stock Please add more!!')
+            return render(request, 'index.html', context)
+    
+    for customer in customers:
+        # if (customer.due_date )
+        if customer.is_past_due and customer.due_date != NULL:
+            messages.warning(request, customer.customerName+'\'s due date of '+customer.due_date.strftime("%Y-%m-%d")+ ' is past, please follow up and update!!')
+            return render(request, 'customers.html', context)
+        
+    return render(request,'customers.html',context)
+
+
 @login_required
 def inventory(request):
     stocks = Stock.objects.all()
