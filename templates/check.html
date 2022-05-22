@@ -25,6 +25,7 @@
                                 <th>Expense Cost</th>
                                 <th>Expense Quantity</th>
                                 <th>Total Paid</th>
+                                <th>Balance</th>
                                 <th>Date</th>
                             </tr>
                         </thead>
@@ -32,12 +33,13 @@
                         {% for inv in checks %}
 
                             <tr>
-                                <td><b>{{ inv.chequeId }}</b></td>
+                                <td><b>C-{{ inv.chequeId }}</b></td>
                                 <td>{{ inv.chooseAccount }}</td>
                                 <td>{{ inv.expenseName }}</td>
                                 <td>{{ inv.expenseCost }}</td>
                                 <td>{{ inv.expenseQuantity }}</td>
                                 <td>{{ inv.totalAmountPaid }}</td>
+                                <td>{{ inv.balance }}</td>
                                 <td>{{ inv.date }}</td>
 
                             </tr>

@@ -21,32 +21,34 @@
                             <tr>
                                 <th>Date</th>
                                 <th>Invoice No</th>
-                                <th>Choose Vendor</th>
+                                <th>Vendor</th>
                                 <th>Mode of payment</th>
-                                <th>Choose Account</th>
-                                <th>Ending Balance</th> #this should show the amount to be cleared i.e the total amount the vendor is demanding
-                                <th>Total Credits Available</th> #this should show 0.00
+                                <th>Amount Paid</th>
+                                <th>Account</th>
+                                <th>Balance</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
-<!--                        <tbody>-->
-<!--                        {% for inv in stocks %}-->
-<!--                        -->
-<!--                            <tr>-->
-<!--                                <td><b>{{ inv.inventoryPart }}</b></td>-->
-<!--                                <td>{{ inv.picture_tag }}</td>-->
-<!--                                <td>{{ inv.description }}</td>-->
-<!--                                <td>{{ inv.cartonQuantity }}</td>-->
-<!--                                <td>{{ inv.piecesQuantity }}</td>-->
-<!--                                <td>{{ inv.costPrice }}</td>-->
-<!--                                <td>{{ inv.sellingPrice }}</td>-->
-<!--                                <td>{{ inv.percentageProfit |floatformat:"0" }} %</td>-->
-<!--                                <td>{{ inv.stockValue }}</td>-->
-<!--                                <td>{{ inv.vendorSupplied }}</td>-->
-<!--                                <td>{{ inv.created_at }}</td>-->
-<!--                                -->
-<!--                            </tr>-->
-<!--                        {% endfor %}-->
-<!--                        </tbody>-->
+                        <tbody>
+                        {% for inv in transfers %}
+                        
+                            <tr>
+                                <td><b>{{ inv.date }}</b></td>
+                                <td>I-{{ inv.InvoiceNumber }}</td>
+                                <td>{{ inv.vendor }}</td>
+                                <td>{{ inv.modeOfPayment }}</td>
+                                <td>{{ inv.amountPaid }}</td>
+                                <td>{{ inv.chooseAccount }}</td>
+                                <td>{{ inv.Balance }}</td>
+                                {% if inv.status == "Complete" %}
+                                    <td style="color:green">{{ inv.status }}</td>
+                                {% else %}
+                                    <td style="color:red">{{ inv.status }}</td>
+                                {% endif %}
+                                
+                            </tr>
+                        {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             </div>

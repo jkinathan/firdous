@@ -5,7 +5,7 @@ from django.shortcuts import render
 # from reportlab.pdfgen import canvas
 # from reportlab.lib.units import inch
 # from reportlab.lib.pagesizes import letter
-from .models import Customer,Stock,Vendor,Cheques, CashInvoice,PurchaseOrder
+from .models import Customer, Payable,Stock, Transfer,Vendor,Cheques, CashInvoice,PurchaseOrder
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import date
@@ -19,6 +19,7 @@ def index(request):
     if request.user.is_staff:
         customers = Customer.objects.all()
         stocks = Stock.objects.all()
+        vendorsPaid = Transfer.objects.all()
         customercount = Customer.objects.all().count()
         stockscount = Stock.objects.all().count()
         vendorcount = Vendor.objects.all().count()
@@ -53,17 +54,27 @@ def index(request):
     accountBalance = 0;
     for Total in customers:
         grandtotal = grandtotal + Total.totalAmountPaid
+    
     for Total in customerCash:
         cash = cash + Total.totalAmountPaid
+
     for Total in customerBank:
-        bank = bank + Total.totalAmountPaid
+            bank = bank + Total.totalAmountPaid
+
+    for vendorPaid in vendorsPaid:
+        if vendorsPaid.modeOfPayment == 'Cash':
+            cash = cash - vendorPaid.amountPaid
+        elif vendorsPaid.modeOfPayment == 'Bank':
+            bank = bank - vendorPaid.amountPaid
+        else:
+            cash = cash - vendorPaid.amountPaid
+                    
     for Total in expenses:
         expensesTotal = expensesTotal + Total.totalAmountPaid
     for debtBal in customers:
         debtorBal = debtorBal + debtBal.balance
     
     for stockProfit in stocks:
-        
         percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice) * 100
 
     print("-----------------------Blaaa_________________")
@@ -182,19 +193,20 @@ def check(request):
 
 @login_required
 def payable(request):
-    # checks = Cheques.objects.all()
-    #
-    # context = {'checks': checks
-    #            }
-    return render(request, 'payable.html')
+    payables = Payable.objects.all()
+    
+    context = {'payables': payables
+               }
+    return render(request, 'payable.html', context)
 
 @login_required
 def transfer(request):
-    # checks = Cheques.objects.all()
-    #
-    # context = {'checks': checks
-    #            }
-    return render(request, 'transfer.html')
+    transfers = Transfer.objects.all()
+    
+    context = {'transfers': transfers
+               }
+    return render(request, 'transfer.html',context)
+    
 @login_required
 def statistics(request):
     # checks = Cheques.objects.all()

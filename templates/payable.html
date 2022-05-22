@@ -19,33 +19,22 @@
                     <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Choose Vendor</th>
+                                <th>Date</th>
+                                <th>Vendor</th>
                                 <th>Item Supplied</th>
-<!--                                <th>Quantity.</th>-->
-<!--                                <th>Unit Price</th>-->
                                 <th>Amount to pay</th>
                             </tr>
                         </thead>
-<!--                        <tbody>-->
-<!--                        {% for inv in stocks %}-->
-<!--                        -->
-<!--                            <tr>-->
-<!--                                <td><b>{{ inv.inventoryPart }}</b></td>-->
-<!--                                <td>{{ inv.picture_tag }}</td>-->
-<!--                                <td>{{ inv.description }}</td>-->
-<!--                                <td>{{ inv.cartonQuantity }}</td>-->
-<!--                                <td>{{ inv.piecesQuantity }}</td>-->
-<!--                                <td>{{ inv.costPrice }}</td>-->
-<!--                                <td>{{ inv.sellingPrice }}</td>-->
-<!--                                <td>{{ inv.percentageProfit |floatformat:"0" }} %</td>-->
-<!--                                <td>{{ inv.stockValue }}</td>-->
-<!--                                <td>{{ inv.vendorSupplied }}</td>-->
-<!--                                <td>{{ inv.created_at }}</td>-->
-<!--                                -->
-<!--                            </tr>-->
-<!--                        {% endfor %}-->
-<!--                        </tbody>-->
+                        <tbody>
+                        {% for inv in payables %}
+                            <tr>
+                                <td><b>{{ inv.date }}</b></td>
+                                <td>{{ inv.vendorSupplied }}</td>
+                                <td>{{ inv.item_supplied }}</td>
+                                <td>{{ inv.amountToPay }}</td>                              
+                            </tr>
+                        {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             </div>

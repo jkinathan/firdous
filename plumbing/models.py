@@ -8,6 +8,9 @@ from django.urls import reverse
 from django.db.models.signals import post_save
 from datetime import datetime
 from django.utils.formats import localize
+import uuid
+import string
+import random
 # Create your models here.
 
 
@@ -138,14 +141,14 @@ class ExchangeRate(models.Model):
 
 class CashInvoice(models.Model):
 
-    shopOptions = (
-        ('firdous', 'firdous'),
-        ('sj', 'sj'),
+    paymentMode = (
+        ('Bank', 'Bank'),
+        ('Cash', 'Cash'),
     )
 
     customerName = models.ForeignKey(Customer, on_delete=models.CASCADE)
     receiptNumber = models.CharField(max_length=150)
-    chooseAccount = models.CharField(default='sj', max_length=20, choices=shopOptions)
+    modeOfPayment = models.CharField(max_length=100, choices=paymentMode, default='Cash')
     item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1,null=False)
     totalAmountPaid = models.FloatField()
@@ -195,7 +198,7 @@ class Cheques(models.Model):
         ('sj', 'sj'),
     )
 
-    chequeId = models.CharField(max_length=150)
+    chequeId = ''.join(random.choices(string.digits, k=8))
     chooseAccount = models.CharField(default='sj', max_length=20, choices=shopOptions)
     expenseName = models.CharField(max_length=150)
     expenseCost =  models.FloatField()
@@ -215,20 +218,68 @@ class Cheques(models.Model):
         return balance
 
     def save(self,*args, **kwargs):
+        self.chequeId = 'C-'+str(self.chequeId)
         self.balance = self.calculate_balance()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.chequeId
+        return 'C-'+str(self.chequeId)
 
 
 class Payable(models.Model):
+    
     vendorSupplied = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     item_supplied = models.ForeignKey(Stock, on_delete=models.CASCADE)
-    totalAmountPaid = models.FloatField()
+    amountToPay = models.FloatField()
     date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
 
     def __str__(self):
         return str(self.vendorSupplied)
+
+class Transfer(models.Model):
+    paymentMode = (
+        ('Bank', 'Bank'),
+        ('Cash', 'Cash'),
+    )
+    account = (
+        ('firdous', 'firdous'),
+        ('sj', 'sj'),
+    )
+    MY_CHOICES = (
+            ('Complete', 'Complete'),
+            ('Pending', 'Pending'),
+            ('Incomplete', 'Incomplete'),
+        )
+    InvoiceNumber = ''.join(random.choices(string.digits, k=8))
+    vendor = models.ForeignKey(Payable, on_delete=models.CASCADE)
+    modeOfPayment = models.CharField(max_length=100, choices=paymentMode,default='Cash')
+    amountPaid = models.FloatField()
+    chooseAccount = models.CharField(max_length=200, choices=account,default='sj')
+    Balance = models.FloatField(default=0.00)
+    status = models.CharField(max_length=20, choices=MY_CHOICES,default='Pending')
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+    # Calcuting balance
+    def calculate_balance(self):
+        Balance = (self.vendor.amountToPay - self.amountPaid) 
+        return Balance
+
+    # Updating Order Status
+    def update_status(self):
+        if(self.Balance < 0.5):
+            status = 'Complete'
+        else:
+            status = 'Pending'
+        return status
+
+    # Saving changes
+    def save(self,*args, **kwargs):
+        self.InvoiceNumber = 'I-'+self.InvoiceNumber
+        self.Balance = self.calculate_balance()
+        self.status = self.update_status()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.vendor)
 
 
