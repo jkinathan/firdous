@@ -18,10 +18,10 @@ class CashInvoiceAdmin(admin.ModelAdmin):
     readonly_fields = ['balance']
 
 class ChequesAdmin(admin.ModelAdmin):
-    readonly_fields = ['chequeId','balance']
+    readonly_fields = ['balance']
 
 class TransferAdmin(admin.ModelAdmin):
-    readonly_fields = ['InvoiceNumber','Balance','status']
+    readonly_fields = ['Balance','status']
 
 admin.site.register(Vendor),
 admin.site.register(Stock,StockAdmin),

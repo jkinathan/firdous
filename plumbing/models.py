@@ -198,7 +198,7 @@ class Cheques(models.Model):
         ('sj', 'sj'),
     )
 
-    chequeId = ''.join(random.choices(string.digits, k=8))
+    # chequeId = random.randint(1, 900000000)
     chooseAccount = models.CharField(default='sj', max_length=20, choices=shopOptions)
     expenseName = models.CharField(max_length=150)
     expenseCost =  models.FloatField()
@@ -218,12 +218,11 @@ class Cheques(models.Model):
         return balance
 
     def save(self,*args, **kwargs):
-        self.chequeId = 'C-'+str(self.chequeId)
         self.balance = self.calculate_balance()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return 'C-'+str(self.chequeId)
+        return 'C-'+str(self.pk)
 
 
 class Payable(models.Model):
@@ -250,7 +249,7 @@ class Transfer(models.Model):
             ('Pending', 'Pending'),
             ('Incomplete', 'Incomplete'),
         )
-    InvoiceNumber = ''.join(random.choices(string.digits, k=8))
+    # InvoiceNumber = random.randint(1, 900000000)
     vendor = models.ForeignKey(Payable, on_delete=models.CASCADE)
     modeOfPayment = models.CharField(max_length=100, choices=paymentMode,default='Cash')
     amountPaid = models.FloatField()
@@ -274,7 +273,6 @@ class Transfer(models.Model):
 
     # Saving changes
     def save(self,*args, **kwargs):
-        self.InvoiceNumber = 'I-'+self.InvoiceNumber
         self.Balance = self.calculate_balance()
         self.status = self.update_status()
         super().save(*args, **kwargs)
