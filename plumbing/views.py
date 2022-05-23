@@ -31,6 +31,7 @@ def index(request):
     # customers = Customer.objects.filter(addedby=request.user)
     customers = Customer.objects.all()
     # print(customers)
+    vendorsPaid = Transfer.objects.all()
     stocks = Stock.objects.all()
     customerCash = Customer.objects.filter(modeOfPayment='Cash')
     customerBank = Customer.objects.filter(modeOfPayment='Bank')
@@ -62,9 +63,9 @@ def index(request):
             bank = bank + Total.totalAmountPaid
 
     for vendorPaid in vendorsPaid:
-        if vendorsPaid.modeOfPayment == 'Cash':
+        if vendorPaid.modeOfPayment == 'Cash':
             cash = cash - vendorPaid.amountPaid
-        elif vendorsPaid.modeOfPayment == 'Bank':
+        elif vendorPaid.modeOfPayment == 'Bank':
             bank = bank - vendorPaid.amountPaid
         else:
             cash = cash - vendorPaid.amountPaid
@@ -206,7 +207,7 @@ def transfer(request):
     context = {'transfers': transfers
                }
     return render(request, 'transfer.html',context)
-    
+
 @login_required
 def statistics(request):
     # checks = Cheques.objects.all()
