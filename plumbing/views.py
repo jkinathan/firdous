@@ -83,10 +83,11 @@ def index(request):
     customercount = Customer.objects.all().count()
     stockscount = Stock.objects.all().count()
     vendorcount = Vendor.objects.all().count()
-
-    accountBalance = grandtotal - expensesTotal
-    grandtotal = cash + bank
     
+    grandtotal = cash + bank
+    accountBalance = grandtotal - expensesTotal
+    
+
     context ={'customers':customers,
               'customercount':customercount,
               'stockscount':stockscount,
