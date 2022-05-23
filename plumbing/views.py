@@ -163,6 +163,10 @@ def inventory(request):
     stocks = Stock.objects.all()
     for stockProfit in stocks:
         percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice) 
+        if stockProfit.piecesQuantity < 2:
+            messages.warning(request, stockProfit.inventoryPart+' are RUNNING LOW, please Restock')
+                
+
 
     context ={'stocks':stocks,
               'percstockProfit':percstockProfit

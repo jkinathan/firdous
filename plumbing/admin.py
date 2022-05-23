@@ -4,7 +4,7 @@ from .models import *
 # Register your models here.
 
 class StockAdmin(admin.ModelAdmin):
-    list_display = ['inventoryPart','picture_tag','cartonQuantity', 'costPrice','piecesQuantity','vendorSupplied']
+    list_display = ['inventoryPart','picture_tag', 'costPrice','piecesQuantity','vendorSupplied']
     readonly_fields = ['percentageProfit']
 
 class CustomerAdmin(admin.ModelAdmin):

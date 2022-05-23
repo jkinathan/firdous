@@ -32,7 +32,7 @@ class Stock(models.Model):
     inventoryImage = models.ImageField(null=True, blank=True,upload_to='images/')
     description = models.TextField(blank=True)
     # unitMeasure = models.CharField(max_length=100, choices=measure,blank=True)
-    cartonQuantity = models.IntegerField(default=1, blank=True)
+    # cartonQuantity = models.IntegerField(default=1, blank=True)
     piecesQuantity = models.IntegerField(default=1, blank=True)
     costPrice = models.FloatField()
     sellingPrice = models.FloatField()
@@ -97,7 +97,7 @@ class Customer(models.Model):
     def calculate_balance(self):
         balance = (self.item_purchased.sellingPrice*self.quantity - self.totalAmountPaid) 
         return balance
-    
+               
     # Updating Order Status
     def update_Order_status(self):
         if(self.balance < 0.5):
@@ -126,6 +126,9 @@ class Customer(models.Model):
         self.balance = self.calculate_balance()
         self.order_status = self.update_Order_status()
         self.update_Due_Date = self.update_Due_Date()
+
+        self.item_purchased.piecesQuantity -= self.quantity
+        self.item_purchased.save()
         super().save(*args, **kwargs)
     
     def __str__(self):

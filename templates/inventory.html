@@ -7,6 +7,18 @@
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
                 <h4 class="page-title">Stocks</h4> 
             </div>
+            <span>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{message.tags}} alert-dismissible">
+                        {{ message|safe }}
+                        <a href="" class="close" and data-dismiss="alert">Close-X</a>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            </span>
+            
         </div>
         <!--row -->
         <!-- /.row -->
@@ -22,7 +34,6 @@
                                 <th>Inventory Part</th>
                                 <th>Inventory Image</th>
                                 <th>Description</th>
-                                <th>CartonQuantity</th>
                                 <th>PiecesQuantity</th>
                                 <th>Cost Price</th>
                                 <th>Selling Price</th>
@@ -40,7 +51,6 @@
                                 <td><b>{{ inv.inventoryPart }}</b></td>
                                 <td>{{ inv.picture_tag }}</td>
                                 <td>{{ inv.description }}</td>
-                                <td>{{ inv.cartonQuantity }}</td>
                                 <td>{{ inv.piecesQuantity }}</td>
                                 <td>{{ inv.costPrice }}</td>
                                 <td>{{ inv.sellingPrice }}</td>
