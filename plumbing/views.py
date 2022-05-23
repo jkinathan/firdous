@@ -53,8 +53,8 @@ def index(request):
     expensesTotal = 0;
     debtorBal = 0;
     accountBalance = 0;
-    for Total in customers:
-        grandtotal = grandtotal + Total.totalAmountPaid
+    # for Total in customers:
+    
     
     for Total in customerCash:
         cash = cash + Total.totalAmountPaid
@@ -85,7 +85,8 @@ def index(request):
     vendorcount = Vendor.objects.all().count()
 
     accountBalance = grandtotal - expensesTotal
-
+    grandtotal = cash + bank
+    
     context ={'customers':customers,
               'customercount':customercount,
               'stockscount':stockscount,
