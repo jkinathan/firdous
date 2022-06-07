@@ -223,12 +223,21 @@ def cashReceipt(request):
     #            }
     return render(request, 'cashreceipt.html')
 
+@login_required
 def invoiceReceipt(request):
     # transfers = Transfer.objects.all()
     #
     # context = {'transfers': transfers
     #            }
     return render(request, 'invoicereceipt.html')
+
+@login_required
+def Receipts(request):
+    # transfers = Transfer.objects.all()
+    #
+    # context = {'transfers': transfers
+    #            }
+    return render(request, 'receipts.html')
 
 def paymentReceipt(request):
     # transfers = Transfer.objects.all()

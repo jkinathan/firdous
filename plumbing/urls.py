@@ -13,6 +13,7 @@ urlpatterns = [
      path('payable/', views.payable, name='payable'),
      path('transfer/', views.transfer, name='transfer'),
      path('cashreceipt/', views.cashReceipt, name='cashreceipt'),
+     path('receipts/', views.Receipts, name='receipts'),
      path('invoicereceipt/', views.invoiceReceipt, name='invoicereceipt'),
      path('paymentreceipt/', views.paymentReceipt, name='paymentreceipt'),
      path('statistics/', views.statistics, name='statistics'),
