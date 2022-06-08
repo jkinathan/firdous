@@ -86,17 +86,22 @@
           <table class="table table-striped">
     <thead>
       <tr>
-        <th>Product</th>
+        <th>Item</th>
         <th>Quantity</th>
         <th>Price</th>
           <th>Total</th>
-          <th>Balance</th>
+
       </tr>
     </thead>
     <tbody>
       <tr>
         <td>
-            <input type="text" name="product" class="form-control">
+<!--            <input type="text" name="product" class="form-control">-->
+            <select class="form-control">
+                  <option>Bulb</option>
+                  <option>Padlock</option>
+                <option>Angle valve</option>
+                </select>
         </td>
         <td>
             <input type="number" name="quantity" class="form-control">
@@ -107,10 +112,6 @@
 
         <td>
             <input type="text" name="total" class="form-control">
-        </td>
-
-        <td>
-            <input type="text" name="balance" class="form-control">
         </td>
       </tr>
       <tr>
@@ -128,9 +129,6 @@
             <input type="text" name="total" class="form-control">
         </td>
 
-        <td>
-            <input type="text" name="balance" class="form-control">
-        </td>
       </tr>
       <tr>
        <td>
@@ -146,11 +144,15 @@
         <td>
             <input type="text" name="total" class="form-control">
         </td>
-
-        <td>
-            <input type="text" name="balance" class="form-control">
-        </td>
       </tr>
+    <tr>
+        <td>
+        <label>Grand Total</label>
+        </td>
+        <td></td>
+        <td></td>
+        <td><input type="text" name="grandtotal" class="form-control"></td>
+    </tr>
     </tbody>
   </table>
   </div>
