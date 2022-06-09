@@ -139,7 +139,8 @@ def customers(request):
     customercount = Customer.objects.all().count()
     
     context ={'customers':customers,
-              'customercount':customercount,
+                'stocks':stocks,
+                'customercount':customercount,
               }
     
     for stock in stocks:
