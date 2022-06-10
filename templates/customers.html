@@ -61,7 +61,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <input type="text" id="chequeNo" name="checkno" class="form-control">
+                                                <span id="chequeNo">R-id</span>
                                             </td>
 
                                             <td>
@@ -178,10 +178,14 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        var receiptId = "R-" + Math.random().toString(16).slice(2)
+        document.getElementById("chequeNo").innerText = receiptId;
+    });
 
     function genId(){
         var receiptId = "R-" + Math.random().toString(16).slice(2)
-        document.getElementById("amountDue").innerText = total.toFixed(2);
+        document.getElementById("chequeNo").innerText = receiptId;
     }
 
     var renumber = 0;
