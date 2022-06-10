@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from django.http import HttpResponse
 from django.shortcuts import render
 # from django.http import FileResponse
 # import io
@@ -16,6 +17,8 @@ def index(request):
     labels = []
     data = []
 
+    
+
     if request.user.is_staff:
         customers = Customer.objects.all()
         stocks = Stock.objects.all()
@@ -26,7 +29,9 @@ def index(request):
         context ={'customers':customers,
               'customercount':customercount,
               'stockscount':stockscount,
-              'vendorcount':vendorcount
+              'vendorcount':vendorcount,
+              'stocks':stocks
+              
               }
     # customers = Customer.objects.filter(addedby=request.user)
     customers = Customer.objects.all()
@@ -55,9 +60,9 @@ def index(request):
     accountBalance = 0;
     # for Total in customers:
     
-    
     for Total in customerCash:
         cash = cash + Total.totalAmountPaid
+        
 
     for Total in customerBank:
             bank = bank + Total.totalAmountPaid
@@ -78,16 +83,15 @@ def index(request):
     for stockProfit in stocks:
         percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice) * 100
 
-    print("-----------------------Blaaa_________________")
-    print(percstockProfit)
     customercount = Customer.objects.all().count()
     stockscount = Stock.objects.all().count()
     vendorcount = Vendor.objects.all().count()
-    
     grandtotal = cash + bank
+    request.session['cash']=cash
     accountBalance = grandtotal - expensesTotal
     
-
+    
+    
     context ={'customers':customers,
               'customercount':customercount,
               'stockscount':stockscount,
@@ -102,6 +106,7 @@ def index(request):
               'accoutnBalance': accountBalance,
               'labels': labels,
               'data': data,
+              'stocks':stocks
               }
     
     for stock in stocks:
@@ -121,6 +126,22 @@ def index(request):
 
 def customers(request):
     
+    # if request.method == 'POST':
+    #     if 'Receipttotal' in request.POST:
+    #         Receipttot = request.POST['Receipttotal'] 
+    #         cash = request.session['cash']
+    #         print(cash)
+    #         request.session['cashy']=cash
+
+    #         cash = cash + float(Receipttot)
+    #         print('------------The Total is here-----------')
+    #         print(float(Receipttot))
+    #         print('----------- new Cash -----------')
+    #         print(cash)
+            
+    #         return  HttpResponse('success')
+    #     return HttpResponse('Fail')
+
     if request.user.is_staff:
         customers = Customer.objects.all()
         stocks = Stock.objects.all()
@@ -130,7 +151,8 @@ def customers(request):
         context ={'customers':customers,
               'customercount':customercount,
               'stockscount':stockscount,
-              'vendorcount':vendorcount
+              'vendorcount':vendorcount,
+              'cash':cash
               }
     # customers = Customer.objects.filter(addedby=request.user)
     customers = Customer.objects.all()
@@ -140,7 +162,7 @@ def customers(request):
     
     context ={'customers':customers,
                 'stocks':stocks,
-                'customercount':customercount,
+                'customercount':customercount
               }
     
     for stock in stocks:
