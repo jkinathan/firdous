@@ -7,10 +7,11 @@ from django.shortcuts import render
 # from reportlab.pdfgen import canvas
 # from reportlab.lib.units import inch
 # from reportlab.lib.pagesizes import letter
-from .models import Customer, Payable,Stock, Transfer,Vendor,Cheques, CashInvoice,PurchaseOrder
+from .models import Account, Customer, Payable,Stock, Transfer,Vendor,Cheques, CashInvoice,PurchaseOrder
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import date
+from django.db.models import Sum
 
 # Create your views here.
 @login_required
@@ -56,33 +57,92 @@ def index(request):
     for custDataBank in customerBank:
         data.append(custDataBank.totalAmountPaid)
 
-    grandtotal  = 0;
-    cash = 0;
-    bank = 0;
-    expensesTotal = 0;
-    debtorBal = 0;
-    accountBalance = 0;
-    # for Total in customers:
+     #new math 
+    newCustCashTotal = Customer.objects.filter(modeOfPayment='Cash').aggregate(Sum('totalAmountPaid'))['totalAmountPaid__sum']
+    newCustBankTotal = Customer.objects.filter(modeOfPayment='Bank').aggregate(Sum('totalAmountPaid'))['totalAmountPaid__sum']
+    newVendorPaidinCashTotal = Transfer.objects.filter(modeOfPayment='Cash').aggregate(Sum('amountPaid'))['amountPaid__sum']
+    newVendorPaidinBankTotal = Transfer.objects.filter(modeOfPayment='Bank').aggregate(Sum('amountPaid'))['amountPaid__sum']
+    expenseTotal = Cheques.objects.aggregate(Sum('totalAmountPaid'))['totalAmountPaid__sum']
+    debtorBalanceTotal = Customer.objects.aggregate(Sum('balance'))['balance__sum']
     
-    for Total in customerCash:
-        cash = cash + Total.totalAmountPaid
-        
-
-    for Total in customerBank:
-            bank = bank + Total.totalAmountPaid
-
-    for vendorPaid in vendorsPaid:
-        if vendorPaid.modeOfPayment == 'Cash':
-            cash = cash - vendorPaid.amountPaid
-        elif vendorPaid.modeOfPayment == 'Bank':
-            bank = bank - vendorPaid.amountPaid
+    if newVendorPaidinBankTotal is not None:
+        accountBalance = ((newCustCashTotal-newVendorPaidinCashTotal) + (newCustBankTotal-newVendorPaidinBankTotal)) - expenseTotal 
+        grandTotal = (newCustCashTotal-newVendorPaidinCashTotal) + (newCustBankTotal-newVendorPaidinBankTotal) 
+    else:
+        accountBalance = ((newCustCashTotal-newVendorPaidinCashTotal) + newCustBankTotal) - expenseTotal 
+        grandTotal = (newCustCashTotal-newVendorPaidinCashTotal) + newCustBankTotal
+    
+     
+    try:
+        acc = Account.objects.get(name='SJ & Firdous')
+        if newVendorPaidinCashTotal is None:
+            acc.cashAccount = newCustCashTotal
+            acc.bankAccount = newCustBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = (newCustCashTotal+newCustBankTotal) - expenseTotal
+            acc.grandTotal = newCustCashTotal + newCustBankTotal
+            acc.save()
+            
+        elif newVendorPaidinBankTotal is None:
+            acc.cashAccount = newCustCashTotal - newVendorPaidinCashTotal
+            acc.bankAccount = newCustBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = (( newCustCashTotal - newVendorPaidinCashTotal ) + newCustBankTotal) - expenseTotal
+            acc.grandTotal = (newCustCashTotal - newVendorPaidinCashTotal) + newCustBankTotal
+            print("---------------------")
+            print(acc.grandTotal)
+            acc.save()
         else:
-            cash = cash - vendorPaid.amountPaid
-                    
-    for Total in expenses:
-        expensesTotal = expensesTotal + Total.totalAmountPaid
-    for debtBal in customers:
-        debtorBal = debtorBal + debtBal.balance
+            acc.cashAccount = newCustCashTotal - newVendorPaidinCashTotal
+            acc.bankAccount = newCustBankTotal - newVendorPaidinBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = accountBalance
+            acc.grandTotal = grandTotal
+            acc.save()
+    except Account.DoesNotExist:
+        acc = Account(name='SJ & Firdous')
+        if newVendorPaidinCashTotal is None and  newVendorPaidinBankTotal is None:
+            acc.cashAccount = newCustCashTotal
+            acc.bankAccount = newCustBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = (newCustCashTotal+newCustBankTotal) - expenseTotal
+            acc.grandTotal = newCustCashTotal + newCustBankTotal
+            acc.save()
+            
+        elif newVendorPaidinBankTotal is None:
+            acc.cashAccount = newCustCashTotal - newVendorPaidinCashTotal
+            acc.bankAccount = newCustBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = (( newCustCashTotal - newVendorPaidinCashTotal ) + newCustBankTotal) - expenseTotal
+            acc.grandTotal = (newCustCashTotal - newVendorPaidinCashTotal) + newCustBankTotal
+            acc.save()
+
+        elif newVendorPaidinCashTotal is None:
+            acc.cashAccount = newCustCashTotal
+            acc.bankAccount = newCustBankTotal - newVendorPaidinBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = (newCustCashTotal + (newCustBankTotal - newVendorPaidinBankTotal)) - expenseTotal
+            acc.grandTotal = newCustCashTotal + (newCustBankTotal - newVendorPaidinBankTotal)
+            acc.save()
+
+        else:
+            acc.cashAccount = newCustCashTotal - newVendorPaidinCashTotal
+            acc.bankAccount = newCustBankTotal - newVendorPaidinBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = accountBalance
+            acc.grandTotal = grandTotal
+            acc.save()
+
+       
+    
+    
     
     for stockProfit in stocks:
         percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice) * 100
@@ -90,9 +150,11 @@ def index(request):
     customercount = Customer.objects.all().count()
     stockscount = Stock.objects.all().count()
     vendorcount = Vendor.objects.all().count()
-    grandtotal = cash + bank
-    request.session['cash']=cash
-    accountBalance = grandtotal - expensesTotal
+
+    # grandtotal = cash + bank
+    # request.session['cash']=cash
+
+    # accountBalance = grandtotal - expensesTotal
     
     
     
@@ -114,14 +176,11 @@ def index(request):
               }
     
     for stock in stocks:
-        #print(inventory)
         if request.user.is_staff and stock.piecesQuantity < 1 :
-            #print(inventory)
             messages.warning(request, stock.inventoryPart+' are running low in stock Please add more!!')
             return render(request, 'index.html', context)
     
     for customer in customers:
-        # if (customer.due_date )
         if customer.is_past_due and customer.due_date != NULL:
             messages.warning(request, customer.customerName+'\'s due date of '+customer.due_date.strftime("%Y-%m-%d")+ ' is past, please follow up and update!!')
             return render(request, 'index.html', context)

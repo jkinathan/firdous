@@ -10,7 +10,10 @@ class StockAdmin(admin.ModelAdmin):
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ['customerName','item_purchased','quantity', 'order_status', 'due_date']
     readonly_fields = ['balance','order_status']
-    
+
+class AccountAdmin(admin.ModelAdmin):
+    list_display = ['name','cashAccount','bankAccount', 'debtorBalance', 'accountBalance','expensesTotal','grandTotal','updated_at']
+    readonly_fields = ['name','cashAccount','bankAccount', 'debtorBalance', 'accountBalance','expensesTotal','grandTotal','updated_at']
 class PurchaseOrderAdmin(admin.ModelAdmin):
     readonly_fields = ['balance']
 
@@ -31,6 +34,7 @@ admin.site.register(CashInvoice, CashInvoiceAdmin),
 admin.site.register(PurchaseOrder, PurchaseOrderAdmin),
 admin.site.register(Cheques,ChequesAdmin),
 admin.site.register(Payable),
+admin.site.register(Account,AccountAdmin),
 admin.site.register(Transfer,TransferAdmin),
 
 

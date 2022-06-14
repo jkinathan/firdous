@@ -15,6 +15,20 @@ from currencies.models import Currency
 # Create your models here.
 
 
+class Account(models.Model):
+    name = models.CharField(max_length=200)
+    cashAccount =  models.FloatField()
+    bankAccount =  models.FloatField()
+    debtorBalance =  models.FloatField()
+    accountBalance =  models.FloatField()
+    expensesTotal =  models.FloatField()
+    grandTotal =  models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return (self.name)
+
 class Vendor(models.Model):
     name = models.CharField(max_length=200)
     location = models.CharField(max_length=150)
@@ -86,9 +100,9 @@ class Customer(models.Model):
     contact = models.CharField(max_length=150, blank=True)
     item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1,null=False)
-    totalAmountPaid = models.FloatField()
+    totalAmountPaid = models.FloatField(default=0.00)
     # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
-    balance = models.FloatField()
+    balance = models.FloatField(default=0.00)
     order_status = models.CharField(max_length=20, choices=MY_CHOICES)
     modeOfPayment = models.CharField(max_length=100, choices=paymentMode)
     purchased_From = models.CharField(default='sj', max_length=20, choices=shopOptions)
@@ -262,7 +276,7 @@ class Transfer(models.Model):
     # InvoiceNumber = random.randint(1, 900000000)
     vendor = models.ForeignKey(Payable, on_delete=models.CASCADE)
     modeOfPayment = models.CharField(max_length=100, choices=paymentMode,default='Cash')
-    amountPaid = models.FloatField()
+    amountPaid = models.FloatField(default=0.00)
     # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     chooseAccount = models.CharField(max_length=200, choices=account,default='sj')
     Balance = models.FloatField(default=0.00)
