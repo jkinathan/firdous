@@ -8,6 +8,9 @@ urlpatterns = [
      #path('api/data', views.get_data, name='api_data'),
      #path('api/chart/data', ChartData.as_view(), name='chart_data'),
 
+     path('selectcurrency/',views.selectcurrency, name='selectcurrency'),
+     # path('savelangcur/',views.savelangcur, name='savelangcur'),
+
      path('stocks/', views.inventory, name='stocks'),
      path('cash/', views.cash, name='cash'),
      path('payable/', views.payable, name='payable'),

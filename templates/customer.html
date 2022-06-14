@@ -37,8 +37,8 @@
                 <td>{{ customer.name }}</td>
                 <td>{{ customer.number }}</td>
                 <td>{{ customer.inventory_purchased }}p</td>
-                <td>{{ customer.amount }}</td>
-                <td>{{ customer.balance }}</td>
+                <td>{{ customer.amount |currency:request.session.currency }} {{ request.session.currency }}</td>
+                <td>{{ customer.balance |currency:request.session.currency }} {{ request.session.currency }}</td>
                 <td>{{ customer.date }}</td>
             </tr>
         {% comment %} {% else %}

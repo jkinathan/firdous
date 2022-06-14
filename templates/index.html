@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load currency %}
 {% block content %}
 
 <div id="page-wrapper">
@@ -86,16 +87,16 @@
                     <h3 class="box-title"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Grand Total</h3>
                     <ul class="list-inline two-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">{{ grandtotal }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">{{ grandtotal|currency:request.session.currency }} {{ request.session.currency }}</span></li>
                     </ul>
                     <hr>
                     <ul class="list-inline one-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Cash: <span class="counter text-purple">{{ cash }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Cash: <span class="counter text-purple">{{ cash |currency:request.session.currency }} {{ request.session.currency }}</span></li>
                     </ul>
                     <ul class="list-inline one-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Bank: <span class="counter text-purple">{{ bank }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Bank: <span class="counter text-purple">{{ bank |currency:request.session.currency }} {{ request.session.currency }}</span></li>
                     </ul>
                 </div>
             </div>
@@ -104,7 +105,7 @@
                     <h3 class="box-title"><i class="fa fa-bank fa-fw" aria-hidden="true"></i>Expenses</h3>
                     <ul class="list-inline two-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ expensesTotal }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ expensesTotal |currency:request.session.currency }} {{ request.session.currency }}</span></li>
                     </ul>
                 </div>
             </div>
@@ -113,7 +114,7 @@
                     <h3 class="box-title"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Account Balance(Total - Expenses)</h3>
                     <ul class="list-inline two-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ accoutnBalance }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ accoutnBalance |currency:request.session.currency }} {{ request.session.currency }}</span></li>
                     </ul>
                 </div>
             </div>
@@ -127,7 +128,7 @@
                     <hr>
                     <ul class="list-inline one-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Total Owed: <span class="counter text-purple">{{ debtorBal }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Total Owed: <span class="counter text-purple">{{ debtorBal |currency:request.session.currency }} {{ request.session.currency }}</span></li>
                     </ul>
                 </div>
             </div>

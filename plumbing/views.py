@@ -1,5 +1,6 @@
 from asyncio.windows_events import NULL
-from django.http import HttpResponse
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 # from django.http import FileResponse
 # import io
@@ -14,10 +15,13 @@ from datetime import date
 # Create your views here.
 @login_required
 def index(request):
+
+    defaultcurr = settings.DEFAULT_CURRENCY
+    if not request.session.has_key('currency'):
+        request.session['currency'] = settings.DEFAULT_CURRENCY
+
     labels = []
     data = []
-
-    
 
     if request.user.is_staff:
         customers = Customer.objects.all()
@@ -531,4 +535,21 @@ def ReturnJobo(request):
     # # return 
     # return FileResponse(buf, as_attachment=True, filename='report.pdf')
 
+@login_required
+def selectcurrency(request):
+    lasturl = request.META.get('HTTP_REFERER')
+    if request.method == 'POST':  # check post
+        request.session['currency'] = request.POST['currency']
+    return HttpResponseRedirect(lasturl)
 
+# @login_required(login_url='/login') # Check login
+# def savelangcur(request):
+#     lasturl = request.META.get('HTTP_REFERER')
+#     curren_user = request.user
+#     language=Language.objects.get(code=request.LANGUAGE_CODE[0:2])
+#     #Save to User profile database
+#     data = UserProfile.objects.get(user_id=curren_user.id )
+#     data.language_id = language.id
+#     data.currency_id = request.session['currency']
+#     data.save()  # save data
+#     return HttpResponseRedirect(lasturl)

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load currency %}
 {% block content %}
 <script>
     var URL = "{% url 'customers' %}"
@@ -158,8 +159,8 @@
                                 <td>{{ customer.item_purchased }}</td>
                                 <td>{{ customer.quantity }}</td>
                                 
-                                <td>{{ customer.totalAmountPaid }}</td>
-                                <td>{{ customer.balance }}</td>
+                                <td>{{ customer.totalAmountPaid |currency:request.session.currency }} {{ request.session.currency }}</td>
+                                <td>{{ customer.balance |currency:request.session.currency }} {{ request.session.currency }}</td>
                                 {% if customer.order_status == "Complete" %}
                                     <td style="color:green">{{ customer.order_status }}</td>
                                 {% else %}

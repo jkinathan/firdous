@@ -11,6 +11,7 @@ from django.utils.formats import localize
 import uuid
 import string
 import random
+from currencies.models import Currency
 # Create your models here.
 
 
@@ -36,6 +37,7 @@ class Stock(models.Model):
     piecesQuantity = models.IntegerField(default=1, blank=True)
     costPrice = models.FloatField()
     sellingPrice = models.FloatField()
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     percentageProfit = models.CharField(max_length=150, blank=True)
     # quantity = models.IntegerField()
     vendorSupplied = models.ForeignKey(Vendor, on_delete=models.CASCADE)
@@ -85,6 +87,7 @@ class Customer(models.Model):
     item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1,null=False)
     totalAmountPaid = models.FloatField()
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     balance = models.FloatField()
     order_status = models.CharField(max_length=20, choices=MY_CHOICES)
     modeOfPayment = models.CharField(max_length=100, choices=paymentMode)
@@ -155,6 +158,7 @@ class CashInvoice(models.Model):
     item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1,null=False)
     totalAmountPaid = models.FloatField()
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     balance = models.FloatField()
     date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
 
@@ -177,6 +181,7 @@ class PurchaseOrder(models.Model):
     item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1,null=False)
     totalAmountPaid = models.FloatField()
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     balance = models.FloatField()
     date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
 
@@ -207,6 +212,7 @@ class Cheques(models.Model):
     expenseCost =  models.FloatField()
     expenseQuantity = models.IntegerField(default=1,null=False)
     totalAmountPaid = models.FloatField()
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     balance = models.FloatField(default=0.0)
     date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
 
@@ -233,6 +239,7 @@ class Payable(models.Model):
     vendorSupplied = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     item_supplied = models.ForeignKey(Stock, on_delete=models.CASCADE)
     amountToPay = models.FloatField()
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
 
     def __str__(self):
@@ -256,6 +263,7 @@ class Transfer(models.Model):
     vendor = models.ForeignKey(Payable, on_delete=models.CASCADE)
     modeOfPayment = models.CharField(max_length=100, choices=paymentMode,default='Cash')
     amountPaid = models.FloatField()
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     chooseAccount = models.CharField(max_length=200, choices=account,default='sj')
     Balance = models.FloatField(default=0.00)
     status = models.CharField(max_length=20, choices=MY_CHOICES,default='Pending')
