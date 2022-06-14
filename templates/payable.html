@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load currency %}
 {% block content %}
 <div id="page-wrapper">
     <div class="container-fluid">
@@ -31,7 +32,7 @@
                                 <td><b>{{ inv.date }}</b></td>
                                 <td>{{ inv.vendorSupplied }}</td>
                                 <td>{{ inv.item_supplied }}</td>
-                                <td>{{ inv.amountToPay }}</td>                              
+                                <td>{{ inv.amountToPay |currency:request.session.currency }} {{ request.session.currency }}</td>                              
                             </tr>
                         {% endfor %}
                         </tbody>

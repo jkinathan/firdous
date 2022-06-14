@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load currency %}
 {% block content %}
 <div id="page-wrapper">
     <div class="container-fluid">
@@ -37,9 +38,9 @@
                                 <td>I-{{ inv.pk }}</td>
                                 <td>{{ inv.vendor }}</td>
                                 <td>{{ inv.modeOfPayment }}</td>
-                                <td>{{ inv.amountPaid }}</td>
+                                <td>{{ inv.amountPaid |currency:request.session.currency }} {{ request.session.currency }}</td>
                                 <td>{{ inv.chooseAccount }}</td>
-                                <td>{{ inv.Balance }}</td>
+                                <td>{{ inv.Balance |currency:request.session.currency }} {{ request.session.currency }}</td>
                                 {% if inv.status == "Complete" %}
                                     <td style="color:green">{{ inv.status }}</td>
                                 {% else %}

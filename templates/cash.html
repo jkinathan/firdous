@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load currency %}
 {% block content %}
+
 <div id="page-wrapper">
     <div class="container-fluid">
         <div class="row bg-title">
@@ -167,8 +169,8 @@
                                 <td>{{ inv.receiptNumber }}</td>
                                 <td>{{ inv.item_purchased }}</td>
                                 <td>{{ inv.quantity }}</td>
-                                <td>{{ inv.totalAmountPaid }}</td>
-                                <td>{{ inv.balance }}</td>
+                                <td>{{ inv.totalAmountPaid |currency:request.session.currency }} {{ request.session.currency }}</td>
+                                <td>{{ inv.balance |currency:request.session.currency }} {{ request.session.currency }}</td>
                                 <td>{{ inv.date }}</td>
                                 
 <!--                                -->
