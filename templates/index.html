@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load currency %}
+{% load humanize %}
 {% block content %}
 
 <div id="page-wrapper">
@@ -84,19 +85,19 @@
             </div>
             <div class="col-lg-4 col-sm-6 col-xs-10">
                 <div class="white-box analytics-info">
-                    <h3 class="box-title"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Grand Total</h3>
+                    <h3 class="box-title"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Grand Total<small>(Includes Cash from Receipts)</small></h3>
                     <ul class="list-inline two-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">{{ grandtotal|currency:request.session.currency }} {{ request.session.currency }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">{{ grandtotal |currency:request.session.currency |intcomma }} {{ request.session.currency }}</span></li>
                     </ul>
                     <hr>
                     <ul class="list-inline one-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Cash: <span class="counter text-purple">{{ cash |currency:request.session.currency }} {{ request.session.currency }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Cash: <span class="counter text-purple">{{ cash |currency:request.session.currency |intcomma }} {{ request.session.currency }}</span></li>
                     </ul>
                     <ul class="list-inline one-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Bank: <span class="counter text-purple">{{ bank |currency:request.session.currency }} {{ request.session.currency }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Bank: <span class="counter text-purple">{{ bank |currency:request.session.currency |intcomma }} {{ request.session.currency }}</span></li>
                     </ul>
                 </div>
             </div>
@@ -105,7 +106,16 @@
                     <h3 class="box-title"><i class="fa fa-bank fa-fw" aria-hidden="true"></i>Expenses</h3>
                     <ul class="list-inline two-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ expensesTotal |currency:request.session.currency }} {{ request.session.currency }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ expensesTotal |currency:request.session.currency |intcomma }} {{ request.session.currency }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-10">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Cash From Receipts</h3>
+                    <ul class="list-inline two-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ cashfromreceipts |currency:request.session.currency |intcomma }} {{ request.session.currency }}</span></li>
                     </ul>
                 </div>
             </div>
@@ -114,7 +124,7 @@
                     <h3 class="box-title"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Account Balance(Total - Expenses)</h3>
                     <ul class="list-inline two-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ accoutnBalance |currency:request.session.currency }} {{ request.session.currency }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ accoutnBalance |currency:request.session.currency |intcomma }} {{ request.session.currency }}</span></li>
                     </ul>
                 </div>
             </div>
@@ -128,7 +138,7 @@
                     <hr>
                     <ul class="list-inline one-part">
                        
-                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Total Owed: <span class="counter text-purple">{{ debtorBal |currency:request.session.currency }} {{ request.session.currency }}</span></li>
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Total Owed: <span class="counter text-purple">{{ debtorBal |currency:request.session.currency |intcomma }} {{ request.session.currency }}</span></li>
                     </ul>
                 </div>
             </div>

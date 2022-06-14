@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load currency %}
+{% load humanize %}
 {% block content %}
 <script>
     var URL = "{% url 'customers' %}"
@@ -159,8 +160,8 @@
                                 <td>{{ customer.item_purchased }}</td>
                                 <td>{{ customer.quantity }}</td>
                                 
-                                <td>{{ customer.totalAmountPaid |currency:request.session.currency }} {{ request.session.currency }}</td>
-                                <td>{{ customer.balance |currency:request.session.currency }} {{ request.session.currency }}</td>
+                                <td>{{ customer.totalAmountPaid |currency:request.session.currency |intcomma }} {{ request.session.currency }}</td>
+                                <td>{{ customer.balance |currency:request.session.currency |intcomma }} {{ request.session.currency }}</td>
                                 {% if customer.order_status == "Complete" %}
                                     <td style="color:green">{{ customer.order_status }}</td>
                                 {% else %}
@@ -191,22 +192,22 @@
     function confirmPrint() {
         var proceed = confirm("Are you sure you want to print?");
         if (proceed) {
-           /** total = total;
+            total = total;
             var data = {
                 'Receipttotal':total,
                 'csrfmiddlewaretoken': window.CSRF_TOKEN
             };
             $.post(URL,data,function(response){
                 if(response === 'success'){
-                    alert('Total Successfully added to Account');
+                    alert('Total Successfully added to Cash Account');
                     window.print();
                 }
                 else{
                     alert('There was an error submitting the data');
                 }
             });
-            **/
-            window.print();
+            
+            //window.print();
         } else {
         //don't proceed
         }

@@ -23,6 +23,7 @@ class Account(models.Model):
     accountBalance =  models.FloatField()
     expensesTotal =  models.FloatField()
     grandTotal =  models.FloatField()
+    cashFromReceipts =  models.FloatField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'rest_framework',
     'currencies',
+    'django.contrib.humanize',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

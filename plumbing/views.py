@@ -81,7 +81,7 @@ def index(request):
             acc.expensesTotal = expenseTotal
             acc.debtorBalance = debtorBalanceTotal
             acc.accountBalance = (newCustCashTotal+newCustBankTotal) - expenseTotal
-            acc.grandTotal = newCustCashTotal + newCustBankTotal
+            acc.grandTotal = acc.cashFromReceipts+newCustCashTotal + newCustBankTotal
             acc.save()
             
         elif newVendorPaidinBankTotal is None:
@@ -90,9 +90,8 @@ def index(request):
             acc.expensesTotal = expenseTotal
             acc.debtorBalance = debtorBalanceTotal
             acc.accountBalance = (( newCustCashTotal - newVendorPaidinCashTotal ) + newCustBankTotal) - expenseTotal
-            acc.grandTotal = (newCustCashTotal - newVendorPaidinCashTotal) + newCustBankTotal
-            print("---------------------")
-            print(acc.grandTotal)
+            acc.grandTotal = (newCustCashTotal - newVendorPaidinCashTotal) + acc.cashFromReceipts+ newCustBankTotal
+            
             acc.save()
         else:
             acc.cashAccount = newCustCashTotal - newVendorPaidinCashTotal
@@ -100,7 +99,7 @@ def index(request):
             acc.expensesTotal = expenseTotal
             acc.debtorBalance = debtorBalanceTotal
             acc.accountBalance = accountBalance
-            acc.grandTotal = grandTotal
+            acc.grandTotal = acc.cashFromReceipts + grandTotal
             acc.save()
     except Account.DoesNotExist:
         acc = Account(name='SJ & Firdous')
@@ -110,7 +109,7 @@ def index(request):
             acc.expensesTotal = expenseTotal
             acc.debtorBalance = debtorBalanceTotal
             acc.accountBalance = (newCustCashTotal+newCustBankTotal) - expenseTotal
-            acc.grandTotal = newCustCashTotal + newCustBankTotal
+            acc.grandTotal = acc.cashFromReceipts + newCustCashTotal + newCustBankTotal
             acc.save()
             
         elif newVendorPaidinBankTotal is None:
@@ -119,7 +118,7 @@ def index(request):
             acc.expensesTotal = expenseTotal
             acc.debtorBalance = debtorBalanceTotal
             acc.accountBalance = (( newCustCashTotal - newVendorPaidinCashTotal ) + newCustBankTotal) - expenseTotal
-            acc.grandTotal = (newCustCashTotal - newVendorPaidinCashTotal) + newCustBankTotal
+            acc.grandTotal = (newCustCashTotal - newVendorPaidinCashTotal) + acc.cashFromReceipts + newCustBankTotal
             acc.save()
 
         elif newVendorPaidinCashTotal is None:
@@ -128,7 +127,7 @@ def index(request):
             acc.expensesTotal = expenseTotal
             acc.debtorBalance = debtorBalanceTotal
             acc.accountBalance = (newCustCashTotal + (newCustBankTotal - newVendorPaidinBankTotal)) - expenseTotal
-            acc.grandTotal = newCustCashTotal + (newCustBankTotal - newVendorPaidinBankTotal)
+            acc.grandTotal = newCustCashTotal + acc.cashFromReceipts + (newCustBankTotal - newVendorPaidinBankTotal)
             acc.save()
 
         else:
@@ -137,10 +136,10 @@ def index(request):
             acc.expensesTotal = expenseTotal
             acc.debtorBalance = debtorBalanceTotal
             acc.accountBalance = accountBalance
-            acc.grandTotal = grandTotal
+            acc.grandTotal = acc.cashFromReceipts + grandTotal
             acc.save()
 
-       
+    
     
     
     
@@ -150,6 +149,7 @@ def index(request):
     customercount = Customer.objects.all().count()
     stockscount = Stock.objects.all().count()
     vendorcount = Vendor.objects.all().count()
+    accounts = Account.objects.filter(name='SJ & Firdous').order_by('-id')[0]
 
     # grandtotal = cash + bank
     # request.session['cash']=cash
@@ -162,14 +162,15 @@ def index(request):
               'customercount':customercount,
               'stockscount':stockscount,
               'vendorcount':vendorcount,
-              'grandtotal':grandtotal,
+              'grandtotal':accounts.grandTotal,
               'percstockProfit':percstockProfit,
-              'cash':cash,
-              'bank':bank,
-              'expensesTotal':expensesTotal,
+              'cash':accounts.cashAccount,
+              'bank':accounts.bankAccount,
+              'expensesTotal':accounts.expensesTotal,
               'customerDebtors':customerDebtors,
-              'debtorBal':debtorBal,
-              'accoutnBalance': accountBalance,
+              'debtorBal':accounts.debtorBalance,
+              'accoutnBalance': accounts.accountBalance,
+              'cashfromreceipts':accounts.cashFromReceipts,
               'labels': labels,
               'data': data,
               'stocks':stocks
@@ -189,21 +190,22 @@ def index(request):
 
 def customers(request):
     
-    # if request.method == 'POST':
-    #     if 'Receipttotal' in request.POST:
-    #         Receipttot = request.POST['Receipttotal'] 
-    #         cash = request.session['cash']
-    #         print(cash)
-    #         request.session['cashy']=cash
+    if request.method == 'POST':
+        if 'Receipttotal' in request.POST:
+            Receipttot = request.POST['Receipttotal'] 
 
-    #         cash = cash + float(Receipttot)
-    #         print('------------The Total is here-----------')
-    #         print(float(Receipttot))
-    #         print('----------- new Cash -----------')
-    #         print(cash)
+            # accounts = Account.objects.filter(name='SJ & Firdous').order_by('-id')[0]
+
+            try:
+                acc = Account.objects.get(name='SJ & Firdous')
+                acc.cashFromReceipts += float(Receipttot)
+                acc.save()
+                print(acc.cashFromReceipts)
+                return  HttpResponse('success')
+            except Account.DoesNotExist:
+                return HttpResponse('Fail')
             
-    #         return  HttpResponse('success')
-    #     return HttpResponse('Fail')
+        return HttpResponse('Fail')
 
     if request.user.is_staff:
         customers = Customer.objects.all()
