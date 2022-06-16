@@ -18,137 +18,101 @@
                     
                     <h3 class="box-title">Cash Invoice Details</h3>
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-  Create Invoice Receipt
-</button>
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    Create Invoice Receipt
+                    </button>
 
 
-  <!-- The Modal -->
-<div class="modal" id="myModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
+                    <!-- The Modal -->
+                    <div class="modal model-print" id="myModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
 
-      <!-- Modal Header -->
-      <div class="modal-header">
-        <h4 class="modal-title">Invoice Receipt</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
-         <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Customer Name</th>
-          <th>Invoice No</th>
-        <th>Date</th>
-      </tr>
-    </thead>
-             <tbody>
-      <tr>
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Invoice Receipt</h4>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Check No</th>
+                                            <th>Customer Name</th>
+                                            <th>Date</th>
+                                            <th>Mode of Payment</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span id="chequeNo">R-id</span>
+                                            </td>
 
-        <td>
-            <input type="text" name="customername" class="form-control">
-        </td>
-         <td>
-            <input type="text" name="checkno" class="form-control">
-        </td>
-        <td>
-            <input type="text" name="Date" class="form-control">
-        </td>
+                                            <td>
+                                                <input type="text" name="customername" class="form-control">
+                                            </td>
 
-      </tr>
-             </tbody>
-         </table>
-      <!-- Modal body -->
-      <div class="modal-body">
-          <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Item</th>
-        <th>Quantity</th>
-        <th>Price</th>
-          <th>Total</th>
-          <th>Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-            <input type="text" name="product" class="form-control">
-        </td>
-        <td>
-            <input type="number" name="quantity" class="form-control">
-        </td>
-        <td>
-            <input type="text" name="price" class="form-control">
-        </td>
+                                            <td>
+                                                <input type="date" name="Date" class="form-control">
+                                            </td>
+                                            <td>
+                                                <div class="form-group">
+                                                    <select class="form-control" id="exampleFormControlSelect1">
+                                                    <option>Cash</option>
+                                                    <option>Bank</option>
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
 
-        <td>
-            <input type="text" name="total" class="form-control">
-        </td>
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    <table class="table order-list table-striped" id="myTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                                <th>Total</th>
+                                            </tr>
+                                        </thead>
+                                            <tbody id="addItems">
 
-        <td>
-            <input type="text" name="balance" class="form-control">
-        </td>
-      </tr>
-      <tr>
-       <td>
-            <input type="text" name="product" class="form-control">
-        </td>
-        <td>
-            <input type="number" name="quantity" class="form-control">
-        </td>
-        <td>
-            <input type="text" name="price" class="form-control">
-        </td>
+                                        </tbody>
+                                    </table>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                <label>Grand Total</label>
+                                                </td>
+                                                <td></td>
+                                                <td></td>
+                                                <td> &nbsp;
+                                                    <span id="amountDue" value="0.00">0.00</span>
+                                                    {% comment %} <input type="text" name="grandtotal" id="amountDue" disabled class="form-control"> {% endcomment %}
+                                                    &nbsp;
+                                                </td>
+                                                <td colspan="5" style="text-align: left;">
+                                                    <button onclick="addItem();" class="btn btn-sm btn-success" value="Add Row"><i class="fa fa-plus"></i>Add Row</button>
+                                                </td>
 
-        <td>
-            <input type="text" name="total" class="form-control">
-        </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
 
-        <td>
-            <input type="text" name="balance" class="form-control">
-        </td>
-      </tr>
-      <tr>
-       <td>
-            <input type="text" name="product" class="form-control">
-        </td>
-        <td>
-            <input type="number" name="quantity" class="form-control">
-        </td>
-        <td>
-            <input type="text" name="price" class="form-control">
-        </td>
-
-        <td>
-            <input type="text" name="total" class="form-control">
-        </td>
-
-        <td>
-            <input type="text" name="balance" class="form-control">
-        </td>
-      </tr>
-    <tr>
-        <td>
-        <label>Grand Total</label>
-        </td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td><input type="text" name="grandtotal" class="form-control"></td>
-    </tr>
-    </tbody>
-  </table>
-  </div>
-
-      <!-- Modal footer -->
-      <div class="modal-footer">
-          <a href="{% url 'cashreceipt' %}"><button type="button" class="btn btn-primary">Generate Receipt</button></a>
-      </div>
-
-    </div>
-  </div>
-</div>
-</div>
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button onclick ="confirmPrint();" id="addrowp">Print Me</button>
+                                    {% comment %} <a href="{% url 'cashreceipt' %}"><button type="button" class="btn btn-primary">Generate Receipt</button></a> {% endcomment %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
                         <thead>
                             <tr>
@@ -183,4 +147,74 @@
         </div>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+        var receiptId = "R-" + Math.random().toString(16).slice(2)
+        document.getElementById("chequeNo").innerText = receiptId;
+    });
+    var renumber = 0;
+
+
+    function confirmPrint() {
+        var proceed = confirm("Are you sure you want to print?");
+        if (proceed) {
+            window.print();
+        } else {
+        //don't proceed
+        }
+    }
+
+
+    function calculateDueAmount() {
+        let total = 0;
+        var tblRows = document.getElementById("addItems").getElementsByTagName('tr');
+
+        for (var i = 0; i < tblRows.length; i++) {
+          let lineTotal = tblRows[i].getElementsByTagName('td')[3].getElementsByTagName('input')[0].value;
+          total = total + Number(lineTotal)
+        }
+
+        document.getElementById("amountDue").innerText = total.toFixed(2);
+      }
+
+      function addItem() {
+        renumber++;
+        var html = "<tr>";
+
+            html  += '<td><select class="form-control">{% for stock in stocks %}<option valve="{{stock.inventoryPart}}">{{stock.inventoryPart}}</option>{% endfor %}</select></td>';
+            html  += "<td><input type='number' class='form-control' onblur='lineTotal(this);' value='0' name='quantity[]'/></td>";
+            html  += "<td><input type='text' class='form-control' onblur='lineTotal(this);' value='0' name='price[]'/></td>";
+            html  += "<td><input type='text' id='lineTotal' class='form-control' value='0' disabled name='total[]'/></td>";
+
+            html += "</tr>";
+            document.getElementById("addItems").insertRow().innerHTML = html;
+        };
+
+        function lineTotal(elem) {
+            var mainRow = elem.parentElement.parentElement;
+            var quantity = mainRow.getElementsByTagName('td')[1].getElementsByTagName('input')[0].value;
+            var price = mainRow.getElementsByTagName('td')[2].getElementsByTagName('input')[0].value;
+            var total = mainRow.getElementsByTagName('td')[3].getElementsByTagName('input')[0];
+            var myResult = Number(quantity) * Number(price);
+
+            total.value = myResult;
+            calculateDueAmount();
+
+          }
+
+
+    function calculateRow(row) {
+        var price = +row.find('input[name^="price"]').val();
+
+        console.log(price);
+    }
+
+    function calculateGrandTotal() {
+        var grandTotal = 0;
+        $("table.order-list").find('input[name^="price"]').each(function () {
+            grandTotal += +$(this).val();
+        });
+        $("#grandtotal").text(grandTotal.toFixed(2));
+    }
+</script>
 {% endblock %}
