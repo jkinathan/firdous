@@ -124,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-DEFAULT_CURRENCY = 'USD'
+DEFAULT_CURRENCY = 'SSP'
 
 LANGUAGE_CODE = 'en-us'
 
