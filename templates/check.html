@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load currency %}
+{% block content %}
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Write Cheques</h4>
+            </div>
+        </div>
+        <!--row -->
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="white-box">
+                    
+                    <h3 class="box-title">Write Cheques Details</h3>
+             
+                    <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Cheque Id</th>
+                                <th>Choose Account</th>
+                                <th>Expense Name</th>
+                                <th>Expense Cost</th>
+                                <th>Expense Quantity</th>
+                                <th>Total Paid</th>
+                                <th>Balance</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for inv in checks %}
+
+                            <tr>
+                                <td><b>C-{{ inv.pk }}</b></td>
+                                <td>{{ inv.chooseAccount }}</td>
+                                <td>{{ inv.expenseName }}</td>
+                                <td>{{ inv.expenseCost }}</td>
+                                <td>{{ inv.expenseQuantity }}</td>
+                                <td>{{ inv.totalAmountPaid |currency:request.session.currency }} {{ request.session.currency }}</td>
+                                <td>{{ inv.balance |currency:request.session.currency }} {{ request.session.currency }}</td>
+                                <td>{{ inv.date }}</td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

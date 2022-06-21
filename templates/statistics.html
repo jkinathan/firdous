@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Dashboard</h4> </div>
+                    <span>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{message.tags}} alert-dismissible">
+                                {{ message|safe }}
+                                <a href="" class="close" and data-dismiss="alert">Close-X</a>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    </span>
+        </div>
+        {% comment %} My Chart {% endcomment %}
+        {% comment %} <div id="container" style="width: 75%;">
+            <canvas id="pie-chart"></canvas>
+        </div> {% endcomment %}
+        
+          <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+          <script>
+        
+            var config = {
+              type: 'pie',
+              data: {
+                datasets: [{
+                  data: {{ data|safe }},
+                  backgroundColor: [
+                    'green', 'yellow', 'orange', 'blue', 'red'
+                  ],
+                  label: 'AmountPaid'
+                }],
+                labels: {{ labels|safe }}
+              },
+              options: {
+                responsive: true
+              }
+            };
+        
+            window.onload = function() {
+              var ctx = document.getElementById('pie-chart').getContext('2d');
+              window.myPie = new Chart(ctx, config);
+            };
+        
+          </script>
+        {% comment %} End My Chart {% endcomment %}
+
+        <div class="row">
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-users fa-fw" aria-hidden="true"></i>Customers</h3>
+                    <ul class="list-inline two-part">
+
+                        <li class="text-right"><i class="ti-arrow-up text-success"></i> <span class="counter text-success">{{ customercount }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-book fa-fw" aria-hidden="true"></i>Stocks</h3>
+                    <ul class="list-inline two-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-purple"></i> <span class="counter text-purple">{{ stockscount }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-12">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-user fa-fw" aria-hidden="true"></i>Vendors</h3>
+                    <ul class="list-inline two-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">{{ vendorcount }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-10">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Grand Total</h3>
+                    <ul class="list-inline two-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-info">{{ grandtotal }}</span></li>
+                    </ul>
+                    <hr>
+                    <ul class="list-inline one-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Cash: <span class="counter text-purple">{{ cash }}</span></li>
+                    </ul>
+                    <ul class="list-inline one-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Bank: <span class="counter text-purple">{{ bank }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-10">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-bank fa-fw" aria-hidden="true"></i>Expenses</h3>
+                    <ul class="list-inline two-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ expensesTotal }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-10">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Account Balance(Total - Expenses)</h3>
+                    <ul class="list-inline two-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ accoutnBalance }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6 col-xs-10">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title"><i class="fa fa-user fa-fw" aria-hidden="true"></i>Debtors</h3>
+                    <ul class="list-inline two-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i> <span class="counter text-blue">{{ customerDebtors }}</span></li>
+                    </ul>
+                    <hr>
+                    <ul class="list-inline one-part">
+                       
+                        <li class="text-right"><i class="ti-arrow-up text-info"></i>Total Owed: <span class="counter text-purple">{{ debtorBal }}</span></li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+        <!--/.row -->
+
+        
+        <!--row -->
+        
+        <!-- /.row -->
+
+    </div>
+</div>
+{% endblock %}

@@ -1,4 +1,7 @@
 from asyncio.windows_events import NULL
+from locale import currency
+from django.conf import settings
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 # from django.http import FileResponse
@@ -6,42 +9,244 @@ from django.shortcuts import render, get_object_or_404, redirect
 # from reportlab.pdfgen import canvas
 # from reportlab.lib.units import inch
 # from reportlab.lib.pagesizes import letter
-from .models import Customer,Stock,Vendor
+from .models import Account, Customer, Payable,Stock, Transfer,Vendor,Cheques, CashInvoice,PurchaseOrder
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import date
+from django.db.models import Sum
+from currencies.models import Currency
 
 # Create your views here.
 @login_required
 def index(request):
+
+    defaultcurr = settings.DEFAULT_CURRENCY
+    if not request.session.has_key('currency'):
+        request.session['currency'] = settings.DEFAULT_CURRENCY
+
+    labels = []
+    data = []
+
     if request.user.is_staff:
         customers = Customer.objects.all()
         stocks = Stock.objects.all()
+        vendorsPaid = Transfer.objects.all()
         customercount = Customer.objects.all().count()
         stockscount = Stock.objects.all().count()
         vendorcount = Vendor.objects.all().count()
         context ={'customers':customers,
               'customercount':customercount,
               'stockscount':stockscount,
-              'vendorcount':vendorcount
+              'vendorcount':vendorcount,
+              'stocks':stocks
+              
               }
     # customers = Customer.objects.filter(addedby=request.user)
     customers = Customer.objects.all()
     # print(customers)
+    vendorsPaid = Transfer.objects.all()
     stocks = Stock.objects.all()
+    customerCash = Customer.objects.filter(modeOfPayment='Cash')
+    customerBank = Customer.objects.filter(modeOfPayment='Bank')
+    customerDebtors = Customer.objects.filter(order_status='Pending').count()
+    expenses = Cheques.objects.all()
+
+
+    # Chart data
+    for custData in customers:
+        labels.append(custData.modeOfPayment)
+    for custDataCash in customerCash:
+        data.append(custDataCash.totalAmountPaid)
+    for custDataBank in customerBank:
+        data.append(custDataBank.totalAmountPaid)
+
+    #new math 
+    newCustCashTotal = Customer.objects.filter(modeOfPayment='Cash').aggregate(Sum('totalAmountPaid'))['totalAmountPaid__sum']
+    newCustBankTotal = Customer.objects.filter(modeOfPayment='Bank').aggregate(Sum('totalAmountPaid'))['totalAmountPaid__sum']
+    newVendorPaidinCashTotal = Transfer.objects.filter(modeOfPayment='Cash').aggregate(Sum('amountPaid'))['amountPaid__sum']
+    newVendorPaidinBankTotal = Transfer.objects.filter(modeOfPayment='Bank').aggregate(Sum('amountPaid'))['amountPaid__sum']
+    expenseTotal = Cheques.objects.aggregate(Sum('totalAmountPaid'))['totalAmountPaid__sum']
+    debtorBalanceTotal = Customer.objects.aggregate(Sum('balance'))['balance__sum']
+    
+    if newVendorPaidinBankTotal is not None:
+        accountBalance = ((newCustCashTotal-newVendorPaidinCashTotal) + (newCustBankTotal-newVendorPaidinBankTotal)) - expenseTotal 
+        grandTotal = (newCustCashTotal-newVendorPaidinCashTotal) + (newCustBankTotal-newVendorPaidinBankTotal) 
+    else:
+        accountBalance = ((newCustCashTotal-newVendorPaidinCashTotal) + newCustBankTotal) - expenseTotal 
+        grandTotal = (newCustCashTotal-newVendorPaidinCashTotal) + newCustBankTotal
+    
+     
+    try:
+        acc = Account.objects.get(name='SJ & Firdous')
+        if newVendorPaidinCashTotal is None:
+            acc.cashAccount = newCustCashTotal
+            acc.bankAccount = newCustBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = (newCustCashTotal+newCustBankTotal) - expenseTotal
+            acc.grandTotal = acc.cashFromReceipts+newCustCashTotal + newCustBankTotal
+            acc.save()
+            
+        elif newVendorPaidinBankTotal is None:
+            acc.cashAccount = newCustCashTotal - newVendorPaidinCashTotal
+            acc.bankAccount = newCustBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = (( newCustCashTotal - newVendorPaidinCashTotal ) + newCustBankTotal) - expenseTotal
+            acc.grandTotal = (newCustCashTotal - newVendorPaidinCashTotal) + acc.cashFromReceipts+ newCustBankTotal
+            
+            acc.save()
+        else:
+            acc.cashAccount = newCustCashTotal - newVendorPaidinCashTotal
+            acc.bankAccount = newCustBankTotal - newVendorPaidinBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = accountBalance
+            acc.grandTotal = acc.cashFromReceipts + grandTotal
+            acc.save()
+    except Account.DoesNotExist:
+        acc = Account(name='SJ & Firdous')
+        if newVendorPaidinCashTotal is None and  newVendorPaidinBankTotal is None:
+            acc.cashAccount = newCustCashTotal
+            acc.bankAccount = newCustBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = (newCustCashTotal+newCustBankTotal) - expenseTotal
+            acc.grandTotal = acc.cashFromReceipts + newCustCashTotal + newCustBankTotal
+            acc.save()
+            
+        elif newVendorPaidinBankTotal is None:
+            acc.cashAccount = newCustCashTotal - newVendorPaidinCashTotal
+            acc.bankAccount = newCustBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = (( newCustCashTotal - newVendorPaidinCashTotal ) + newCustBankTotal) - expenseTotal
+            acc.grandTotal = (newCustCashTotal - newVendorPaidinCashTotal) + acc.cashFromReceipts + newCustBankTotal
+            acc.save()
+
+        elif newVendorPaidinCashTotal is None:
+            acc.cashAccount = newCustCashTotal
+            acc.bankAccount = newCustBankTotal - newVendorPaidinBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = (newCustCashTotal + (newCustBankTotal - newVendorPaidinBankTotal)) - expenseTotal
+            acc.grandTotal = newCustCashTotal + acc.cashFromReceipts + (newCustBankTotal - newVendorPaidinBankTotal)
+            acc.save()
+
+        else:
+            acc.cashAccount = newCustCashTotal - newVendorPaidinCashTotal
+            acc.bankAccount = newCustBankTotal - newVendorPaidinBankTotal
+            acc.expensesTotal = expenseTotal
+            acc.debtorBalance = debtorBalanceTotal
+            acc.accountBalance = accountBalance
+            acc.grandTotal = acc.cashFromReceipts + grandTotal
+            acc.save()
+
+    
+    
+    
+    
     for stockProfit in stocks:
         percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice) * 100
 
-    print("-----------------------Blaaa_________________")
-    print(percstockProfit)
     customercount = Customer.objects.all().count()
     stockscount = Stock.objects.all().count()
     vendorcount = Vendor.objects.all().count()
+    accounts = Account.objects.filter(name='SJ & Firdous').order_by('-id')[0]
+
+    # grandtotal = cash + bank
+    # request.session['cash']=cash
+
+    # accountBalance = grandtotal - expensesTotal
+    
+    
+    
     context ={'customers':customers,
               'customercount':customercount,
               'stockscount':stockscount,
               'vendorcount':vendorcount,
+              'grandtotal':accounts.grandTotal,
               'percstockProfit':percstockProfit,
+              'cash':accounts.cashAccount,
+              'bank':accounts.bankAccount,
+              'expensesTotal':accounts.expensesTotal,
+              'customerDebtors':customerDebtors,
+              'debtorBal':accounts.debtorBalance,
+              'accoutnBalance': accounts.accountBalance,
+              'cashfromreceipts':accounts.cashFromReceipts,
+              'labels': labels,
+              'data': data,
+              'stocks':stocks
+              }
+    
+    for stock in stocks:
+        if request.user.is_staff and stock.piecesQuantity < 1 :
+            messages.warning(request, stock.inventoryPart+' are running low in stock Please add more!!')
+            return render(request, 'index.html', context)
+    
+    for customer in customers:
+        if customer.is_past_due and customer.due_date != NULL:
+            messages.warning(request, customer.customerName+'\'s due date of '+customer.due_date.strftime("%Y-%m-%d")+ ' is past, please follow up and update!!')
+            return render(request, 'index.html', context)
+        
+    return render(request,'index.html',context)
+
+def customers(request):
+    curry = Currency.objects.filter(code='SSP')
+    for currr in curry:
+        curr = currr.factor
+    if request.method == 'POST':
+        if 'Receipttotal' in request.POST:
+            Receipttot = request.POST['Receipttotal'] 
+            convertedValue = request.POST['convertedValue'] 
+            # accounts = Account.objects.filter(name='SJ & Firdous').order_by('-id')[0]
+
+            try:
+                acc = Account.objects.get(name='SJ & Firdous')
+                
+                print(convertedValue)
+                if convertedValue == '1':
+                    finValue = float(Receipttot) * float(curr)
+                    
+                    acc.cashFromReceipts += float(finValue)
+                    
+                    print(acc.cashFromReceipts)
+                    acc.save()
+                else:
+                    acc.cashFromReceipts += float(Receipttot)
+                    
+                    print(acc.cashFromReceipts)
+                    acc.save()
+                print(acc.cashFromReceipts)
+                return  HttpResponse('success')
+            except Account.DoesNotExist:
+                return HttpResponse('Fail')
+            
+        return HttpResponse('Fail')
+
+    if request.user.is_staff:
+        customers = Customer.objects.all()
+        stocks = Stock.objects.all()
+        customercount = Customer.objects.all().count()
+        stockscount = Stock.objects.all().count()
+        vendorcount = Vendor.objects.all().count()
+        context = {'customers':customers,
+              'customercount':customercount,
+              'stockscount':stockscount,
+              'vendorcount':vendorcount,
+              'cash':cash,
+              'curr':curr,
+              }
+    # customers = Customer.objects.filter(addedby=request.user)
+    customers = Customer.objects.all()
+    # print(customers)
+    
+    customercount = Customer.objects.all().count()
+    
+    context = {'customers':customers,
+                'stocks':stocks,
+                'customercount':customercount,
+                'curr':curr,
               }
     
     for stock in stocks:
@@ -55,22 +260,105 @@ def index(request):
         # if (customer.due_date )
         if customer.is_past_due and customer.due_date != NULL:
             messages.warning(request, customer.customerName+'\'s due date of '+customer.due_date.strftime("%Y-%m-%d")+ ' is past, please follow up and update!!')
-            return render(request, 'index.html', context)
+            return render(request, 'customers.html', context)
         
-    return render(request,'index.html',context)
+    return render(request,'customers.html',context)
+
 
 @login_required
 def inventory(request):
     stocks = Stock.objects.all()
     for stockProfit in stocks:
         percstockProfit = (stockProfit.sellingPrice - stockProfit.costPrice) 
+        if stockProfit.piecesQuantity < 2:
+            messages.warning(request, stockProfit.inventoryPart+' are RUNNING LOW, please Restock')
+                
+
 
     context ={'stocks':stocks,
               'percstockProfit':percstockProfit
               }
     return render(request, 'inventory.html', context)
 
+@login_required
+def cash(request):
+    cash = CashInvoice.objects.all()
+    
+    context ={'cash':cash
+              }
+    return render(request, 'cash.html',context)
 
+@login_required
+def purchase(request):
+    purchase = PurchaseOrder.objects.all()
+    
+    context ={'purchase':purchase
+              }
+    return render(request, 'purchase.html',context)
+
+@login_required
+def check(request):
+    checks = Cheques.objects.all()
+    
+    context ={'checks':checks
+              }
+    return render(request, 'check.html',context)
+
+
+@login_required
+def payable(request):
+    payables = Payable.objects.all()
+    
+    context = {'payables': payables
+               }
+    return render(request, 'payable.html', context)
+
+@login_required
+def transfer(request):
+    transfers = Transfer.objects.all()
+    
+    context = {'transfers': transfers
+               }
+    return render(request, 'transfer.html',context)
+
+
+@login_required
+def cashReceipt(request):
+    # transfers = Transfer.objects.all()
+    #
+    # context = {'transfers': transfers
+    #            }
+    return render(request, 'cashreceipt.html')
+
+@login_required
+def invoiceReceipt(request):
+    # transfers = Transfer.objects.all()
+    #
+    # context = {'transfers': transfers
+    #            }
+    return render(request, 'invoicereceipt.html')
+
+@login_required
+def Receipts(request):
+    # transfers = Transfer.objects.all()
+    #
+    # context = {'transfers': transfers
+    #            }
+    return render(request, 'receipts.html')
+
+def paymentReceipt(request):
+    # transfers = Transfer.objects.all()
+    #
+    # context = {'transfers': transfers
+    #            }
+    return render(request, 'paymentreceipt.html')
+@login_required
+def statistics(request):
+    # checks = Cheques.objects.all()
+    #
+    # context = {'checks': checks
+    #            }
+    return render(request, 'statistics.html')
 # @login_required
 def Createcustomer(request):
     # customer = Customer()
@@ -333,4 +621,21 @@ def ReturnJobo(request):
     # # return 
     # return FileResponse(buf, as_attachment=True, filename='report.pdf')
 
+@login_required
+def selectcurrency(request):
+    lasturl = request.META.get('HTTP_REFERER')
+    if request.method == 'POST':  # check post
+        request.session['currency'] = request.POST['currency']
+    return HttpResponseRedirect(lasturl)
 
+# @login_required(login_url='/login') # Check login
+# def savelangcur(request):
+#     lasturl = request.META.get('HTTP_REFERER')
+#     curren_user = request.user
+#     language=Language.objects.get(code=request.LANGUAGE_CODE[0:2])
+#     #Save to User profile database
+#     data = UserProfile.objects.get(user_id=curren_user.id )
+#     data.language_id = language.id
+#     data.currency_id = request.session['currency']
+#     data.save()  # save data
+#     return HttpResponseRedirect(lasturl)
