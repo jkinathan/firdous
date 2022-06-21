@@ -3,6 +3,7 @@ from locale import currency
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 # from django.http import FileResponse
 # import io
 # from reportlab.pdfgen import canvas
@@ -398,40 +399,46 @@ def Createcustomer(request):
 
 
 def Customerdetailfunc(request, pk):
-    # inventorys = Inventory.objects.all()
-    # customer = get_object_or_404(Customer, pk=pk)
-    # if request.method == "POST":
-    #
-    #     if "editcustomer" in request.POST:
-    #
-    #         customer.name = request.POST["name"]
-    #         customer.number = request.POST["number"]
-    #
-    #         inventoryid = request.POST["inventory_purchased"]
-    #         customer.inventory_purchased = get_object_or_404(Inventory, id=inventoryid)
-    #
-    #         customer.quantity = request.POST["quantity"]
-    #
-    #         inventory = Inventory.objects.get(id=inventoryid)
-    #         if int(customer.quantity) < inventory.quantity:
-    #             inventory.quantity -= int(customer.quantity)
-    #             inventory.save()
-    #
-    #             customer.amount = request.POST["amount"]
-    #             customer.balance = inventory.price * int(customer.quantity) - int(customer.amount) * int(
-    #                 customer.quantity)
-    #             customer.addedby = request.user
-    #             customer.save()
-    #
-    #             messages.warning(request, 'Customer updated Successfully!!')
-    #             return redirect('index')
-    #         else:
-    #             messages.warning(request, 'Not enough inventory in stock, please contact Administrator')
-    #             return redirect('index')
+    stocks = Stock.objects.all()
+    customer = get_object_or_404(Customer, pk=pk)
+    if request.method == "POST":
+    
+        if "editcustomer" in request.POST:
+    
+            customer.customerName = request.POST["name"]
+            customer.contact = request.POST["number"]
+    
+            inventoryid = request.POST["inventory_purchased"]
+            customer.item_purchased = get_object_or_404(Stock, id=inventoryid)
+    
+            customer.quantity = request.POST["quantity"]
+            customer.totalAmountPaid = request.POST["totalAmountPaid"]
+            customer.modeOfPayment = request.POST["modofpayment"]
+            customer.purchased_From = request.POST["purchased_From"]
+            customer.due_date = request.POST["due_date"]
+            
 
-    # context = {'customer': customer, 'inventorys': inventorys}
 
-    return render(request, 'customer_detail.html', )
+            stock = Stock.objects.get(id=inventoryid)
+            if int(customer.quantity) < stock.piecesQuantity:
+                stock.piecesQuantity -= int(customer.quantity)
+                stock.save()
+    
+                customer.totalAmountPaid = request.POST["amount"]
+                # customer.balance = inventory.price * int(customer.quantity) - int(customer.amount) * int(
+                #     customer.quantity)
+                customer.addedby = request.user
+                customer.save()
+    
+                messages.warning(request, 'Customer updated Successfully!!')
+                return redirect('index')
+            else:
+                messages.warning(request, 'Not enough inventory in stock, please contact Administrator')
+                return redirect('index')
+
+    context = {'customer': customer, 'stocks': stocks}
+
+    return render(request, 'customer_detail.html',context )
 
 
 # @login_required
