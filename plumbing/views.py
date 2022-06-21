@@ -203,16 +203,19 @@ def customers(request):
             try:
                 acc = Account.objects.get(name='SJ & Firdous')
                 
-                if convertedValue == 1:
-                    acc.cashFromReceipts += float(Receipttot*curr)
-                    print("Before")
+                print(convertedValue)
+                if convertedValue == '1':
+                    finValue = float(Receipttot) * float(curr)
+                    
+                    acc.cashFromReceipts += float(finValue)
+                    
                     print(acc.cashFromReceipts)
-                    # acc.save()
+                    acc.save()
                 else:
                     acc.cashFromReceipts += float(Receipttot)
-                    print("After")
+                    
                     print(acc.cashFromReceipts)
-                    # acc.save()
+                    acc.save()
                 print(acc.cashFromReceipts)
                 return  HttpResponse('success')
             except Account.DoesNotExist:

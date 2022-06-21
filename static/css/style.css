@@ -14,5 +14,14 @@
         .model-print, .model-print * {
             visibility: visible;
         }
+        #example{
+            visibility: hidden;
+        }
+        .btn{
+            visibility: hidden;
+        }
+        #addrowp{
+            visibility: hidden;
+        }
 
     }

@@ -117,7 +117,7 @@
                                                     &nbsp;
                                                 </td>
                                                 <td colspan="5" style="text-align: left;">    
-                                                    <button onclick="addItem();" class="btn btn-sm btn-success" value="Add Row"><i class="fa fa-plus"></i>Add Row</button>
+                                                    <button onclick="addItem();" class="btn btn-sm btn-success" id="sspusd1" value="Add Row"><i class="fa fa-plus"></i>Add Row</button>
                                                 </td>
                                                 <td colspan="5" style="text-align: left;">    
                                                     <button onclick="myConverter();" id="sspusd" class="btn btn-sm btn-success" value="0">Convert-To-USD</button>
@@ -278,6 +278,7 @@
             document.getElementById("amountDue").innerText = convtotal.toFixed(2) ;
             document.getElementById("currencyy").innerText = ": USD"
             document.getElementById('sspusd').disabled = true;
+            document.getElementById('sspusd1').disabled = true;
             document.getElementById('sspusd').value = 1;
           }
 </script>
