@@ -123,6 +123,7 @@
                                 <th>Total Paid</th>
                                 <th>Balance</th>
                                 <th>date</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,8 +137,11 @@
                                 <td>{{ inv.totalAmountPaid |currency:request.session.currency }} {{ request.session.currency }}</td>
                                 <td>{{ inv.balance |currency:request.session.currency }} {{ request.session.currency }}</td>
                                 <td>{{ inv.date }}</td>
-                                
-<!--                                -->
+                                <td>
+                                    <button type="submit" class="btn btn-primary">
+                                            Detail Page
+                                    </button>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
