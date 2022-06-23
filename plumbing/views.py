@@ -357,12 +357,12 @@ def transfer(request):
     return render(request, 'transfer.html',context)
 
 @login_required
-def Receipts(request):
-    # transfers = Transfer.objects.all()
-    #
-    # context = {'transfers': transfers
-    #            }
-    return render(request, 'receipts.html')
+# def Receipts(request):
+#     # transfers = Transfer.objects.all()
+#     #
+#     # context = {'transfers': transfers
+#     #            }
+#     return render(request, 'receipts.html')
 def Receivepayment_detail(request,pk):
     inventorys = Stock.objects.all()
     customer = get_object_or_404(Customer, pk=pk)
@@ -412,6 +412,9 @@ def statistics(request):
     # context = {'checks': checks
     #            }
     return render(request, 'statistics.html')
+def Reportsview(request):
+    return render(request,'reports.html')
+
 # @login_required
 def Createcustomer(request):
     # customer = Customer()
