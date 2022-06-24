@@ -135,6 +135,7 @@
                         <tbody>
                         {% for inv in cash %}
 <!--                        -->
+                            
                             <tr>
                                 <td><b>{{ inv.customerName }}</b></td>
                                 <td>{{ inv.receiptNumber }}</td>
@@ -144,11 +145,11 @@
                                 <td>{{ inv.balance |currency:request.session.currency }} {{ request.session.currency }}</td>
                                 <td>{{ inv.date }}</td>
                                 <td>
-                                    <button type="submit" class="btn btn-primary">
-                                            Detail Page
-                                    </button>
+                                    <a href="{% url 'customerdetail' inv.id %}" class="btn btn-primary">Detail Page</a>
+                                    
                                 </td>
                             </tr>
+                        
                         {% endfor %}
                         </tbody>
                     </table>
