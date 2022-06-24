@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Receive Payment Detail</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="white-box">
+                    
+                    <h3 class="box-title">Invoice Detail</h3>
+                    <form action="{% url 'invoicepaymentdetail' customer.id %}" method="POST">
+                    {% csrf_token %}
+                         <div class="form-group">
+                            <label>Choose Customer:</label>
+                            <select class="selectpicker form-control" id="customername" name="customername">
+                                <option value="{{ customer.name.id }}" selected="selected">{{ customer.name  }}</option>
+                                {% for inv in cash %}
+                                <option value="{{ customer.id }}">{{ inv.CustomerName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Inventory Purchased:</label>
+                            <select class="selectpicker form-control" id="item_purchased" name="item_purchased">
+                                <option value="{{ customer.inventory_purchased.id }}" selected="selected">{{ customer.inventory_purchased  }}</option>
+                                {% for invent in inventorys %}
+                                <option value="{{ invent.id }}">{{ invent.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Amount Due:</label>
+                            <input type="text" class="form-control" id="amount" placeholder="{{ customer.amount }}" name="amount" value="{{ customer.amount }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="balance">Balance:</label>
+                            <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ customer.balance }}" name="balance" value="{{ customer.balance }}">
+                        </div>
+                        <button type="submit" class="btn btn-warning">Pay</button>
+<!--                      <button type="submit" name="editcustomer" class="btn btn-warning">Update</button>-->
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
