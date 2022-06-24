@@ -218,7 +218,7 @@ def customers(request):
                     print(acc.cashFromReceipts)
                     acc.save()
                 print(acc.cashFromReceipts)
-                return  HttpResponse('success')
+                return HttpResponse('success')
             except Account.DoesNotExist:
                 return HttpResponse('Fail')
             
@@ -251,7 +251,7 @@ def customers(request):
     
     for stock in stocks:
         #print(inventory)
-        if request.user.is_staff and stock.piecesQuantity < 1 :
+        if request.user.is_staff and stock.piecesQuantity < 1:
             #print(inventory)
             messages.warning(request, stock.inventoryPart+' are running low in stock Please add more!!')
             return render(request, 'index.html', context)
@@ -282,10 +282,64 @@ def inventory(request):
 
 @login_required
 def cash(request):
+    # cash = CashInvoice.objects.all()
+
+    # context ={'cash':cash
+    #           }
+    if request.method == 'POST':
+        if 'Receipttotal' in request.POST:
+            Receipttot = request.POST['Receipttotal']
+
+            # accounts = Account.objects.filter(name='SJ & Firdous').order_by('-id')[0]
+
+            try:
+                acc = Account.objects.get(name='SJ & Firdous')
+                acc.cashFromReceipts += float(Receipttot)
+                acc.save()
+                print(acc.cashFromReceipts)
+                return HttpResponse('success')
+            except Account.DoesNotExist:
+                return HttpResponse('Fail')
+
+        return HttpResponse('Fail')
+
+    if request.user.is_staff:
+        cash = CashInvoice.objects.all()
+        stocks = Stock.objects.all()
+        customercount = CashInvoice.objects.all().count()
+        stockscount = Stock.objects.all().count()
+        vendorcount = Vendor.objects.all().count()
+        context = {'cash': cash,
+                   'customercount': customercount,
+                   'stockscount': stockscount,
+                   'vendorcount': vendorcount,
+                   'cash': cash
+                   }
+    # customers = Customer.objects.filter(addedby=request.user)
     cash = CashInvoice.objects.all()
-    
-    context ={'cash':cash
-              }
+    # print(customers)
+
+    customercount = CashInvoice.objects.all().count()
+
+    context = {'cash': cash,
+               'stocks': stocks,
+               'customercount': customercount
+               }
+
+    for stock in stocks:
+        # print(inventory)
+        if request.user.is_staff and stock.piecesQuantity < 1:
+            # print(inventory)
+            messages.warning(request, stock.inventoryPart + ' are running low in stock Please add more!!')
+            return render(request, 'index.html', context)
+
+    # for customer in customers:
+    #     # if (customer.due_date )
+    #     if customer.is_past_due and customer.due_date != NULL:
+    #         messages.warning(request, customer.customerName + '\'s due date of ' + customer.due_date.strftime(
+    #             "%Y-%m-%d") + ' is past, please follow up and update!!')
+    #         return render(request, 'customers.html', context)
+
     return render(request, 'cash.html',context)
 
 @login_required
@@ -321,37 +375,55 @@ def transfer(request):
                }
     return render(request, 'transfer.html',context)
 
-
 @login_required
-def cashReceipt(request):
-    # transfers = Transfer.objects.all()
-    #
-    # context = {'transfers': transfers
-    #            }
-    return render(request, 'cashreceipt.html')
+# def Receipts(request):
+#     # transfers = Transfer.objects.all()
+#     #
+#     # context = {'transfers': transfers
+#     #            }
+#     return render(request, 'receipts.html')
+def Receivepayment_detail(request,pk):
+    inventorys = Stock.objects.all()
+    customer = get_object_or_404(Customer, pk=pk)
+    if request.method == "POST":
 
-@login_required
-def invoiceReceipt(request):
-    # transfers = Transfer.objects.all()
-    #
-    # context = {'transfers': transfers
-    #            }
-    return render(request, 'invoicereceipt.html')
+        if "editcustomer" in request.POST:
 
-@login_required
-def Receipts(request):
-    # transfers = Transfer.objects.all()
-    #
-    # context = {'transfers': transfers
-    #            }
-    return render(request, 'receipts.html')
+            customer.name = request.POST["name"]
+            customer.number = request.POST["number"]
 
-def paymentReceipt(request):
-    # transfers = Transfer.objects.all()
-    #
-    # context = {'transfers': transfers
-    #            }
-    return render(request, 'paymentreceipt.html')
+            inventoryid = request.POST["inventory_purchased"]
+            customer.inventory_purchased = get_object_or_404(Stock, id=inventoryid)
+
+            customer.quantity = request.POST["quantity"]
+
+            inventory = Stock.objects.get(id=inventoryid)
+            if int(customer.quantity) < inventory.quantity:
+                inventory.quantity -= int(customer.quantity)
+                inventory.save()
+
+                customer.amount = request.POST["amount"]
+                customer.balance = inventory.price * int(customer.quantity) - int(customer.amount) * int(
+                    customer.quantity)
+                customer.addedby = request.user
+                customer.save()
+
+                messages.warning(request, 'Customer updated Successfully!!')
+                return redirect('index')
+            else:
+                messages.warning(request, 'Not enough inventory in stock, please contact Administrator')
+                return redirect('index')
+
+    context = {'customer': customer, 'inventorys': inventorys}
+
+    return render(request,'invoicepayment_detail.html')
+#
+# def paymentReceipt(request):
+#     # transfers = Transfer.objects.all()
+#     #
+#     # context = {'transfers': transfers
+#     #            }
+#     return render(request, 'paymentreceipt.html')
 @login_required
 def statistics(request):
     # checks = Cheques.objects.all()
@@ -359,6 +431,9 @@ def statistics(request):
     # context = {'checks': checks
     #            }
     return render(request, 'statistics.html')
+def Reportsview(request):
+    return render(request,'reports.html')
+
 # @login_required
 def Createcustomer(request):
     # customer = Customer()
