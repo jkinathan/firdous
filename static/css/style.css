@@ -23,5 +23,8 @@
         #addrowp{
             visibility: hidden;
         }
+        #page-wrapper {
+            visibility: visible;
+        }
 
     }

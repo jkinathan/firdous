@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div id="page-wrapper">
+<div id="page-wrapper" class="model-print">
     <div class="container-fluid">
         <div class="row bg-title">
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -13,8 +13,8 @@
                 <div class="white-box">
                     
                     <h3 class="box-title">Invoice Detail</h3>
-                    <form action="#" method="POST">
-                    {% csrf_token %}
+                    <form action="#">
+                    
                          <div class="form-group">
                             <label>Customer Name</label>
                             <input type="text" class="form-control" disabled id="name" placeholder="{{ customer.customerName }}" name="customerName" value="{{ customer.customerName }}">
@@ -22,19 +22,20 @@
                         </div>
                         <div class="form-group">
                             <label>Inventory Purchased:</label>
-                            <input type="text" class="form-control" disabled id="name" placeholder="{{ customer.item_purchased }}" name="itempurchased" value="{{ customer.item_purchased }}">
+                            <input type="text" class="form-control" id="name" placeholder="{{ customer.item_purchased }}" name="itempurchased" value="{{ customer.item_purchased }}">
 
                         </div>
 
                         <div class="form-group">
                             <label for="amount">Amount Paid:</label>
-                            <input type="text" class="form-control" id="amount" disabled placeholder="{{ customer.totalAmountPaid }}" name="totalAmountPaid" value="{{ customer.totalAmountPaid }}">
+                            <input type="text" class="form-control" id="amount" placeholder="{{ customer.totalAmountPaid }}" name="totalAmountPaid" value="{{ customer.totalAmountPaid }}">
                         </div>
                         <div class="form-group">
                             <label for="balance">Balance:</label>
-                            <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ customer.balance }}" name="balance" value="{{ customer.balance }}">
+                            <input type="text" class="form-control" id="balance" placeholder="{{ customer.balance }}" name="balance" value="{{ customer.balance }}">
                         </div>
-                        <button type="submit" class="btn btn-warning">Pay</button>
+                        <button onclick ="window.print();" id="addrowp2" class="btn btn-warning">Print</button>
+                        
 <!--                      <button type="submit" name="editcustomer" class="btn btn-warning">Update</button>-->
                     </form>
                 </div>
