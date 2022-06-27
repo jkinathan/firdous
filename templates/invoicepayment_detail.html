@@ -13,36 +13,28 @@
                 <div class="white-box">
                     
                     <h3 class="box-title">Invoice Detail</h3>
-                    <form action="{% url 'invoicepaymentdetail' customer.id %}" method="POST">
+                    <form action="#" method="POST">
                     {% csrf_token %}
                          <div class="form-group">
-                            <label>Choose Customer:</label>
-                            <select class="selectpicker form-control" id="customername" name="customername">
-                                <option value="{{ customer.name.id }}" selected="selected">{{ customer.name  }}</option>
-                                {% for inv in cash %}
-                                <option value="{{ customer.id }}">{{ inv.CustomerName }}</option>
-                                {% endfor %}
-                            </select>
+                            <label>Customer Name</label>
+                            <input type="text" class="form-control" disabled id="name" placeholder="{{ customer.customerName }}" name="customerName" value="{{ customer.customerName }}">
+
                         </div>
                         <div class="form-group">
                             <label>Inventory Purchased:</label>
-                            <select class="selectpicker form-control" id="item_purchased" name="item_purchased">
-                                <option value="{{ customer.inventory_purchased.id }}" selected="selected">{{ customer.inventory_purchased  }}</option>
-                                {% for invent in inventorys %}
-                                <option value="{{ invent.id }}">{{ invent.name }}</option>
-                                {% endfor %}
-                            </select>
+                            <input type="text" class="form-control" disabled id="name" placeholder="{{ customer.item_purchased }}" name="itempurchased" value="{{ customer.item_purchased }}">
+
                         </div>
 
                         <div class="form-group">
-                            <label for="amount">Amount Due:</label>
-                            <input type="text" class="form-control" id="amount" placeholder="{{ customer.amount }}" name="amount" value="{{ customer.amount }}">
+                            <label for="amount">Amount Paid:</label>
+                            <input type="text" class="form-control" id="amount" disabled placeholder="{{ customer.totalAmountPaid }}" name="totalAmountPaid" value="{{ customer.totalAmountPaid }}">
                         </div>
                         <div class="form-group">
                             <label for="balance">Balance:</label>
                             <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ customer.balance }}" name="balance" value="{{ customer.balance }}">
                         </div>
-                        <button type="submit" class="btn btn-warning">Pay</button>
+                        <button type="submit" class="btn btn-warning">Print</button>
 <!--                      <button type="submit" name="editcustomer" class="btn btn-warning">Update</button>-->
                     </form>
                 </div>

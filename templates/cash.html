@@ -134,8 +134,7 @@
                         </thead>
                         <tbody>
                         {% for inv in cash %}
-<!--                        -->
-                            
+
                             <tr>
                                 <td><b>{{ inv.customerName }}</b></td>
                                 <td>{{ inv.receiptNumber }}</td>
@@ -145,8 +144,7 @@
                                 <td>{{ inv.balance |currency:request.session.currency }} {{ request.session.currency }}</td>
                                 <td>{{ inv.date }}</td>
                                 <td>
-                                    <a href="{% url 'customerdetail' inv.id %}" class="btn btn-primary">Detail Page</a>
-                                    
+                                    <a href="{% url 'invoicepaymentdetail' inv.id %}" class="btn btn-primary">Detail Page</a>
                                 </td>
                             </tr>
                         

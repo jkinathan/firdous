@@ -384,13 +384,15 @@ def transfer(request):
 #     return render(request, 'receipts.html')
 def Receivepayment_detail(request,pk):
     inventorys = Stock.objects.all()
-    customer = get_object_or_404(Customer, pk=pk)
+    customer = get_object_or_404(CashInvoice, pk=pk)
+
+    # print(customer.name)
     if request.method == "POST":
 
         if "editcustomer" in request.POST:
 
-            customer.name = request.POST["name"]
-            customer.number = request.POST["number"]
+            customer.customerName = request.POST["name"]
+            customer.receiptNumber = request.POST["number"]
 
             inventoryid = request.POST["inventory_purchased"]
             customer.inventory_purchased = get_object_or_404(Stock, id=inventoryid)
@@ -416,7 +418,7 @@ def Receivepayment_detail(request,pk):
 
     context = {'customer': customer, 'inventorys': inventorys}
 
-    return render(request,'invoicepayment_detail.html')
+    return render(request,'invoicepayment_detail.html',context)
 #
 # def paymentReceipt(request):
 #     # transfers = Transfer.objects.all()
