@@ -339,7 +339,22 @@ def check(request):
               }
     return render(request, 'check.html',context)
 
+@login_required
+def PurchaseReport(request):
 
+    return render(request, 'purchase-report.html')
+@login_required
+def ExpenseReport(request):
+
+    return render(request, 'expense-report.html')
+def StockReport(request):
+
+    return render(request, 'stock-report.html')
+@login_required
+def SalesReport(request):
+    return render(request, 'sales-report.html')
+def ProfitLossReport(request):
+    return render(request, 'profit-and-loss.html')
 @login_required
 def payable(request):
     payables = Payable.objects.all()

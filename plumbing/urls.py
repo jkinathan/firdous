@@ -24,6 +24,12 @@ urlpatterns = [
      path('purchase/', views.purchase, name='purchase'),
      path('check/', views.check, name='check'),
      path('reportstemp/', views.Reportsview, name='reportstemp'),
+     # Reports
+     path('purchase-report/', views.PurchaseReport, name='purchase-report'),
+     path('expense-report/', views.ExpenseReport, name='expense-report'),
+     path('stock-report/', views.StockReport, name='stock-report'),
+     path('sales-report/', views.SalesReport, name='sales-report'),
+     path('profitloss-report/', views.ProfitLossReport, name='profitloss-report'),
      # path('enterbills/', views.enterbills, name='enterbills'),
      # path('paybills/', views.paybills, name='paybills'),
      #path('technicians/', views.technician, name='technicians'),
