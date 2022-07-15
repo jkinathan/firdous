@@ -19,6 +19,34 @@ from django.db.models import Count, F
 from datetime import datetime
 
 # Create your views here.
+def profitReport(request):
+    myDate = datetime.now()
+
+    labels = []
+    data = []
+
+    if "plotChart" in request.POST:    
+        datestart = request.POST["start_date"]
+        dateend = request.POST["end_date"] 
+        # annotate(distance=ExpressionWrapper(
+        stocks = Stock.objects.values('inventoryPart').annotate(percentageProfit=F('percentageProfit')).order_by('inventoryPart').filter(created_at__lte=dateend,created_at__gte=datestart)
+    else:
+        stocks = Stock.objects.values('inventoryPart').annotate(percentageProfit=F('percentageProfit')).order_by('inventoryPart').filter(created_at__lte=myDate.strftime("%Y-%m-%d"))
+
+    # Chart data
+    
+    for stockData in stocks:
+        labels.append(stockData['inventoryPart'])
+    
+    
+    for stockData in stocks:
+        data.append(stockData['percentageProfit'])
+
+    
+    context ={'labels': labels,
+              'data': data,
+    }
+    return render(request,'profitReport.html',context)
 
 def dashboard(request):
 

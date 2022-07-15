@@ -11,7 +11,7 @@
   <div class="container-fluid">
       <div class="row bg-title">
           <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-              <h4 class="page-title">Sales Report</h4> 
+              <h4 class="page-title">Profit Report</h4> 
           </div>
       </div>
       <!--row -->
@@ -20,7 +20,7 @@
           <div class="col-md-12 col-lg-12 col-sm-12">
               <div class="white-box">
 
-                  <form action="{% url 'salesReport' %}" method="POST">
+                  <form action="{% url 'profitReport' %}" method="POST">
                       {% csrf_token %}
                       <div class="form-group">
                           <label for="startDate">From Date *</label>
@@ -45,11 +45,11 @@
                   type: 'bar',
                   data: {
                     datasets: [{
-                      data: {{ data|safe }},
+                      data: {{ data|safe }} ,
                       backgroundColor: [
                         'green', 'yellow', 'orange', 'blue', 'red'
                       ],
-                      label: 'Sales'
+                      label: '% Profit'
                     }],
                     labels: {{ labels|safe }}
                   },
