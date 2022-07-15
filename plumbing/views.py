@@ -15,8 +15,45 @@ from django.contrib.auth.decorators import login_required
 from datetime import date
 from django.db.models import Sum
 from currencies.models import Currency
+from django.db.models import Count, F
+from datetime import datetime
 
 # Create your views here.
+
+def dashboard(request):
+
+    myDate = datetime.now()
+
+    labels = []
+    data = []
+
+    if "plotChart" in request.POST:    
+        datestart = request.POST["start_date"]
+        dateend = request.POST["end_date"] 
+
+        customers = Customer.objects.values('item_purchased__inventoryPart').annotate(mycount=Count('item_purchased')).order_by('item_purchased').filter(date__lte=dateend,date__gte=datestart)
+    else:
+        customers = Customer.objects.values('item_purchased__inventoryPart').annotate(mycount=Count('item_purchased')).order_by('item_purchased').filter(date__lte=myDate.strftime("%Y-%m-%d"))
+
+    # Chart data
+
+    print("------here--------")
+    print(customers)
+    
+    for stockData in customers:
+        labels.append(stockData['item_purchased__inventoryPart'])
+    
+    
+    for stockData in customers:
+        data.append(stockData['mycount'])
+
+    
+    context ={'labels': labels,
+              'data': data,
+    }
+    return render(request,'dashboard.html',context)
+
+
 @login_required
 def index(request):
 
