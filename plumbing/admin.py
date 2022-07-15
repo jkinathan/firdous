@@ -8,7 +8,7 @@ class StockAdmin(admin.ModelAdmin):
     readonly_fields = ['percentageProfit']
 
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['customerName','item_purchased','quantity', 'order_status', 'due_date']
+    list_display = ['customerName','item_purchased','quantity', 'order_status','date', 'due_date']
     readonly_fields = ['balance','order_status']
 
 class AccountAdmin(admin.ModelAdmin):

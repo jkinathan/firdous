@@ -30,10 +30,10 @@ def dashboard(request):
     if "plotChart" in request.POST:    
         datestart = request.POST["start_date"]
         dateend = request.POST["end_date"] 
-
-        customers = Customer.objects.values('item_purchased__inventoryPart').annotate(mycount=Count('item_purchased')).order_by('item_purchased').filter(date__lte=dateend,date__gte=datestart)
+        # annotate(distance=ExpressionWrapper(
+        customers = Customer.objects.values('item_purchased__inventoryPart').annotate(mycount=F('quantity')*Count('item_purchased')).order_by('item_purchased').filter(date__lte=dateend,date__gte=datestart)
     else:
-        customers = Customer.objects.values('item_purchased__inventoryPart').annotate(mycount=Count('item_purchased')).order_by('item_purchased').filter(date__lte=myDate.strftime("%Y-%m-%d"))
+        customers = Customer.objects.values('item_purchased__inventoryPart').annotate(mycount=F('quantity')*Count('item_purchased')).order_by('item_purchased').filter(date__lte=myDate.strftime("%Y-%m-%d"))
 
     # Chart data
 
