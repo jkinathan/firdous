@@ -415,30 +415,30 @@ def Receivepayment_detail(request,pk):
     return render(request,'invoicepayment_detail.html')
 
 def Writecheques_detail(request,pk):
-    cheqs = Cheques.objects.all()
-    customer = get_object_or_404(Customer, pk=pk)
+    # cheqs = Cheques.objects.all()
+    cheqs = get_object_or_404(Cheques, pk=pk)
     if request.method == "POST":
 
         if "editcheque" in request.POST:
 
-            check.name = request.POST["name"]
-            customer.number = request.POST["number"]
+            cheqs.name = request.POST["name"]
+            cheqs.number = request.POST["number"]
 
             inventoryid = request.POST["inventory_purchased"]
-            customer.inventory_purchased = get_object_or_404(Stock, id=inventoryid)
+            cheqs.inventory_purchased = get_object_or_404(Stock, id=inventoryid)
 
-            customer.quantity = request.POST["quantity"]
+            cheqs.quantity = request.POST["quantity"]
 
             inventory = Stock.objects.get(id=inventoryid)
-            if int(customer.quantity) < inventory.quantity:
-                inventory.quantity -= int(customer.quantity)
+            if int(cheqs.quantity) < inventory.quantity:
+                inventory.quantity -= int(cheqs.quantity)
                 inventory.save()
 
-                customer.amount = request.POST["amount"]
-                customer.balance = inventory.price * int(customer.quantity) - int(customer.amount) * int(
-                    customer.quantity)
-                customer.addedby = request.user
-                customer.save()
+                cheqs.amount = request.POST["amount"]
+                cheqs.balance = inventory.price * int(cheqs.quantity) - int(cheqs.amount) * int(
+                    cheqs.quantity)
+                cheqs.addedby = request.user
+                cheqs.save()
 
                 messages.warning(request, 'Customer updated Successfully!!')
                 return redirect('index')
@@ -446,7 +446,7 @@ def Writecheques_detail(request,pk):
                 messages.warning(request, 'Not enough inventory in stock, please contact Administrator')
                 return redirect('index')
 
-    context = {'customer': customer, 'cheqs': cheqs}
+    context = {'cheqs': cheqs}
 
     return render(request,'cheques_detail.html',context)
 #
@@ -539,7 +539,7 @@ def Customerdetailfunc(request, pk):
 
     context = {'customer': customer, 'inventorys': inventorys}
 
-    return render(request, 'customer_detail.html', )
+    return render(request, 'customer_detail.html', context)
 
 
 # @login_required
