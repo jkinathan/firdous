@@ -16,6 +16,9 @@ urlpatterns = [
      path('payable/', views.payable, name='payable'),
      path('transfer/', views.transfer, name='transfer'),
      path('writecheque/<int:pk>', views.Writecheques_detail, name='writecheque'),
+     path('transferdetail/<int:pk>', views.Transferdetail, name='transferdetail'),
+
+     path('payabledetail/<int:pk>', views.Payabledetail, name='payabledetail'),
      # path('receipts/', views.Receipts, name='receipts'),
 
      path('customerdetail/<int:pk>', views.Customerdetailfunc, name='customerdetail'),

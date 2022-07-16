@@ -6,20 +6,20 @@
     <div class="container-fluid">
         <div class="row bg-title">
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                <h4 class="page-title">Update Cheques</h4>
+                <h4 class="page-title">Print Cheque</h4>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12 col-lg-12 col-sm-12">
                 <div class="white-box">
-                    <h3 class="box-title">Update Cheques</h3>
+                    <h3 class="box-title">Print Cheque</h3>
                     <form action="{% url 'writecheque' cheqs.id %}" method="POST">
                     {% csrf_token %}
                         
                         <div class="form-group">
                             <label>Choose Account:</label>
                             <select class="selectpicker form-control" id="customername" name="customername">
-                                <option value="{{ inv.name.id }}" selected="selected">{{ inv.expenseName  }}</option>
+                                <option value="{{ cheqs.name.id }}" selected="selected">{{ cheqs.chooseAccount  }}</option>
                                 {% for inv in cash %}
                                 <option value="{{ inv.expense }}">{{ inv.expenseName }}</option>
                                 {% endfor %}
@@ -28,32 +28,31 @@
 
                         <div class="form-group">
                             <label for="name">Expense Name:</label>
-                            <input type="text" name="branch" class="form-control "id="branch" placeholder="{{ inv.branch }}" value="{{ inv.branch }}">
+                            <input type="text" name="expensename" class="form-control "id="branch" placeholder="{{ cheqs.expenseName }}" value="{{ cheqs.expenseName }}">
                         </div>
                           <div class="form-group">
                             <label for="name">Expense Cost:</label>
-                            <input type="text" name="expense" class="form-control "id="expense" placeholder="{{ inv.expense }}" value="{{ inv.expense }}">
+                            <input type="text" name="expense" class="form-control "id="expense"  placeholder="{{ cheqs.expenseCost }}" value="{{ cheqs.expenseCost }}">
                         </div>
                            <div class="form-group">
                             <label for="quantity">Quantity:</label>
-                            <input type="number"  min="1" max="15" class="form-control" id="quantity" placeholder="{{ inv.quantity }}" name="quantity" value="{{ inv.quantity }}">
+                            <input type="number"  min="1" max="15" class="form-control" id="quantity" placeholder="{{ cheqs.expenseQuantity }}" name="quantity" value="{{ cheqs.expenseQuantity }}">
                         </div>
                          <div class="form-group">
                             <label for="amount">Total Paid:</label>
-                            <input type="text" class="form-control" id="amount" placeholder="{{ customer.amount }}" name="amount" value="{{ customer.amount }}">
+                            <input type="text" class="form-control" id="amount" placeholder="{{ cheqs.totalAmountPaid|currency:request.session.currency }} {{ request.session.currency }}" name="amount" value="{{ cheqs.totalAmountPaid|currency:request.session.currency }} {{ request.session.currency }}">
                         </div>
                         <div class="form-group">
                             <label for="balance">Balance:</label>
-                            <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ customer.balance }}" name="balance" value="{{ customer.balance }}">
+                            <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ cheqs.balance|currency:request.session.currency }} {{ request.session.currency }}" name="balance" value="{{ customer.balance|currency:request.session.currency }} {{ request.session.currency }}">
                         </div>
 
                         <div class="form-group">
                             <label for="name">Date:</label>
                             <div class='input-group date' id='datetimepicker13'>
-                                <input type='datetime-local' class="form-control" name="datedone" value="{{ inv.date }}" required/>
+                                <input type='datetime-local' class="form-control" name="datedone" value="{{ cheqs.date }}" required/>
                             </div>
                         </div>
-
 <!--                        <div class="form-group">-->
 <!--                            <label for="status">Status:</label>-->
 <!--                            <select class="selectpicker form-control" name="statusr" id="statusr">-->
@@ -64,8 +63,6 @@
 <!--                            -->
 <!--                            </select>-->
 <!--                        </div>-->
-                        
-                        
                         <button type="submit" name="updatecheque" class="btn btn-success">Print</button>
                     </form>
                 </div>

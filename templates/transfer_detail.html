@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load currency %}
+{% block content %}
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Transfer Detail</h4>
+                  <button type="submit" class="btn btn-warning">
+                     <li>
+                        <a href="{% url 'transfer' %}" class="waves-effect"><i class="fa fa-credit-card fa-fw" aria-hidden="true"></i>Transfer</a>
+                    </li>
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="white-box">
+                    <h3 class="box-title">Transfer Detail</h3>
+                    <form action="{% url 'transferdetail' transfer.id %}" method="POST">
+                    {% csrf_token %}
+                        
+                        <div class="form-group">
+                            <label>Choose Account:</label>
+                            <select class="selectpicker form-control" id="customername" name="customername">
+                                <option value="{{ transfer.vendor.id }}" selected="selected">{{ transfer.vendor  }}</option>
+                                {% for transfer in transfers %}
+                                <option value="{{ inv.expense }}">{{ transfer.vendor }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                           <div class="form-group">
+                            <label>Mode of Payment:</label>
+                            <select class="selectpicker form-control" id="modeofpyment" name="customername">
+                                <option value="{{ transfer.vendor.id }}" selected="selected">{{ transfer.modeOfPayment  }}</option>
+                                {% for transfer in transfers %}
+                                <option value="{{ inv.expense }}">{{ transfer.modeOfPayment }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="name">Amount paid:</label>
+                            <input type="text" name="amountpaid" class="form-control "id="branch" placeholder="{{ transfer.amountPaid|currency:request.session.currency }}{{ request.session.currency }}" value="{{ transfer.amountPaid|currency:request.session.currency }}{{ request.session.currency }}">
+                        </div>
+
+                           <div class="form-group">
+                            <label>Account:</label>
+                            <select class="selectpicker form-control" id="account" name="account">
+                                <option value="{{ transfer.vendor.id }}" selected="selected">{{ transfer.chooseAccount }}</option>
+                                {% for transfer in transfers %}
+                                <option value="{{ inv.expense }}">{{ transfer.chooseAccount }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="balance">Balance:</label>
+                            <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ transfer.Balance|currency:request.session.currency }}{{ request.session.currency }}" name="balance" value="{{ transfer.Balance|currency:request.session.currency }}{{ request.session.currency }}">
+                        </div>
+
+                         <div class="form-group">
+                            <label for="balance">Status:</label>
+                            <input type="text" class="form-control" id="status" disabled=True placeholder="{{ transfer.status }}" name="balance" value="{{ customer.balance }}">
+                        </div>
+
+<!--                        <div class="form-group">-->
+<!--                            <label for="status">Status:</label>-->
+<!--                            <select class="selectpicker form-control" name="statusr" id="statusr">-->
+<!--                            <option value="{{ returnjob.status }}" selected="selected">{{ returnjob.status }}</option>-->
+<!--                                -->
+<!--                                <option value="Complete">Complete</option>-->
+<!--                                <option value="Incomplete">Incomplete</option>-->
+<!--                            -->
+<!--                            </select>-->
+<!--                        </div>-->
+                        
+                        
+                        <button type="submit" name="updatecheque" class="btn btn-success">Print</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

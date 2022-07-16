@@ -449,6 +449,78 @@ def Writecheques_detail(request,pk):
     context = {'cheqs': cheqs}
 
     return render(request,'cheques_detail.html',context)
+
+def Transferdetail(request,pk):
+    # cheqs = Cheques.objects.all()
+    transfer = get_object_or_404(Transfer, pk=pk)
+    if request.method == "POST":
+
+        if "editcheque" in request.POST:
+
+            transfer.name = request.POST["name"]
+            transfer.number = request.POST["number"]
+
+            inventoryid = request.POST["inventory_purchased"]
+            transfer.inventory_purchased = get_object_or_404(Stock, id=inventoryid)
+
+            transfer.quantity = request.POST["quantity"]
+
+            inventory = Stock.objects.get(id=inventoryid)
+            if int(transfer.quantity) < inventory.quantity:
+                inventory.quantity -= int(transfer.quantity)
+                inventory.save()
+
+                transfer.amount = request.POST["amount"]
+                transfer.balance = inventory.price * int(transfer.quantity) - int(transfer.amount) * int(
+                    transfer.quantity)
+                transfer.addedby = request.user
+                transfer.save()
+
+                messages.warning(request, 'Customer updated Successfully!!')
+                return redirect('index')
+            else:
+                messages.warning(request, 'Not enough inventory in stock, please contact Administrator')
+                return redirect('index')
+
+    context = {'transfer': transfer}
+
+    return render(request,'transfer_detail.html',context)
+def Payabledetail(request,pk):
+    # cheqs = Cheques.objects.all()
+    pay = get_object_or_404(Payable, pk=pk)
+    if request.method == "POST":
+
+        if "editcheque" in request.POST:
+
+            pay.vendorSupplied = request.POST["name"]
+            pay.item_supplied = request.POST["number"]
+
+            inventoryid = request.POST["inventory_purchased"]
+            #transfer.inventory_purchased = get_object_or_404(Stock, id=inventoryid)
+
+            transfer.quantity = request.POST["quantity"]
+
+            inventory = Stock.objects.get(id=inventoryid)
+            if int(transfer.quantity) < inventory.quantity:
+                inventory.quantity -= int(transfer.quantity)
+                inventory.save()
+
+                transfer.amount = request.POST["amount"]
+                transfer.balance = inventory.price * int(transfer.quantity) - int(transfer.amount) * int(
+                    transfer.quantity)
+                transfer.addedby = request.user
+                transfer.save()
+
+                messages.warning(request, 'Customer updated Successfully!!')
+                return redirect('index')
+            else:
+                messages.warning(request, 'Not enough inventory in stock, please contact Administrator')
+                return redirect('index')
+
+    context = {'pay': pay}
+
+    return render(request,'payable_detail.html',context)
+#
 #
 # def paymentReceipt(request):
 #     # transfers = Transfer.objects.all()
