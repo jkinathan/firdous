@@ -2,7 +2,7 @@
 {% load static %}
 {% load currency %}
 {% block content %}
-<div id="page-wrapper">
+<div id="page-wrapper" class="model-print">
     <div class="container-fluid">
         <div class="row bg-title">
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -55,7 +55,7 @@
                             <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ customer.balance|currency:request.session.currency }} {{ request.session.currency }}" name="balance" value="{{ customer.balance|currency:request.session.currency }} {{ request.session.currency}}">
                         </div>
                         
-                        <button type="submit" name="editcustomer" class="btn btn-warning">Print</button>
+                        <button onclick="window.print();" class="btn btn-warning">Print</button>
                     </form>
                 </div>
             </div>

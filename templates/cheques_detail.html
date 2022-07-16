@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load currency %}
 {% block content %}
 
-<div id="page-wrapper">
+<div id="page-wrapper" class="model-print">
     <div class="container-fluid">
         <div class="row bg-title">
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -44,7 +45,7 @@
                         </div>
                         <div class="form-group">
                             <label for="balance">Balance:</label>
-                            <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ cheqs.balance|currency:request.session.currency }} {{ request.session.currency }}" name="balance" value="{{ customer.balance|currency:request.session.currency }} {{ request.session.currency }}">
+                            <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ cheqs.balance|currency:request.session.currency }} {{ request.session.currency }}" name="balance" value="{{ cheqs.balance|currency:request.session.currency }} {{ request.session.currency }}">
                         </div>
 
                         <div class="form-group">
@@ -63,7 +64,7 @@
 <!--                            -->
 <!--                            </select>-->
 <!--                        </div>-->
-                        <button type="submit" name="updatecheque" class="btn btn-success">Print</button>
+                        <button onclick="window.print();" class="btn btn-success">Print</button>
                     </form>
                 </div>
             </div>

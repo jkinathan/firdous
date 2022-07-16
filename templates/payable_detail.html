@@ -3,7 +3,7 @@
 {% load currency %}
 {% block content %}
 
-<div id="page-wrapper">
+<div id="page-wrapper" class="model-print">
     <div class="container-fluid">
         <div class="row bg-title">
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -59,7 +59,7 @@
 <!--                        </div>-->
                         
                         
-                        <button type="submit" name="updatecheque" class="btn btn-success">Print</button>
+                        <button onclick="window.print();" class="btn btn-success">Print</button>
                     </form>
                 </div>
             </div>

@@ -578,7 +578,7 @@ def Createcustomer(request):
 
 
 def Customerdetailfunc(request, pk):
-    inventorys = Stock.objects.all()
+    # inventorys = Stock.objects.all()
     customer = get_object_or_404(Customer, pk=pk)
     if request.method == "POST":
 
@@ -609,7 +609,7 @@ def Customerdetailfunc(request, pk):
                 messages.warning(request, 'Not enough inventory in stock, please contact Administrator')
                 return redirect('index')
 
-    context = {'customer': customer, 'inventorys': inventorys}
+    context = {'customer': customer}
 
     return render(request, 'customer_detail.html', context)
 
