@@ -413,6 +413,42 @@ def Receivepayment_detail(request,pk):
     context = {'customer': customer, 'inventorys': inventorys}
 
     return render(request,'invoicepayment_detail.html')
+
+def Writecheques_detail(request,pk):
+    cheqs = Cheques.objects.all()
+    customer = get_object_or_404(Customer, pk=pk)
+    if request.method == "POST":
+
+        if "editcheque" in request.POST:
+
+            check.name = request.POST["name"]
+            customer.number = request.POST["number"]
+
+            inventoryid = request.POST["inventory_purchased"]
+            customer.inventory_purchased = get_object_or_404(Stock, id=inventoryid)
+
+            customer.quantity = request.POST["quantity"]
+
+            inventory = Stock.objects.get(id=inventoryid)
+            if int(customer.quantity) < inventory.quantity:
+                inventory.quantity -= int(customer.quantity)
+                inventory.save()
+
+                customer.amount = request.POST["amount"]
+                customer.balance = inventory.price * int(customer.quantity) - int(customer.amount) * int(
+                    customer.quantity)
+                customer.addedby = request.user
+                customer.save()
+
+                messages.warning(request, 'Customer updated Successfully!!')
+                return redirect('index')
+            else:
+                messages.warning(request, 'Not enough inventory in stock, please contact Administrator')
+                return redirect('index')
+
+    context = {'customer': customer, 'cheqs': cheqs}
+
+    return render(request,'cheques_detail.html',context)
 #
 # def paymentReceipt(request):
 #     # transfers = Transfer.objects.all()
@@ -470,38 +506,38 @@ def Createcustomer(request):
 
 
 def Customerdetailfunc(request, pk):
-    # inventorys = Inventory.objects.all()
-    # customer = get_object_or_404(Customer, pk=pk)
-    # if request.method == "POST":
-    #
-    #     if "editcustomer" in request.POST:
-    #
-    #         customer.name = request.POST["name"]
-    #         customer.number = request.POST["number"]
-    #
-    #         inventoryid = request.POST["inventory_purchased"]
-    #         customer.inventory_purchased = get_object_or_404(Inventory, id=inventoryid)
-    #
-    #         customer.quantity = request.POST["quantity"]
-    #
-    #         inventory = Inventory.objects.get(id=inventoryid)
-    #         if int(customer.quantity) < inventory.quantity:
-    #             inventory.quantity -= int(customer.quantity)
-    #             inventory.save()
-    #
-    #             customer.amount = request.POST["amount"]
-    #             customer.balance = inventory.price * int(customer.quantity) - int(customer.amount) * int(
-    #                 customer.quantity)
-    #             customer.addedby = request.user
-    #             customer.save()
-    #
-    #             messages.warning(request, 'Customer updated Successfully!!')
-    #             return redirect('index')
-    #         else:
-    #             messages.warning(request, 'Not enough inventory in stock, please contact Administrator')
-    #             return redirect('index')
-    #
-    # context = {'customer': customer, 'inventorys': inventorys}
+    inventorys = Stock.objects.all()
+    customer = get_object_or_404(Customer, pk=pk)
+    if request.method == "POST":
+
+        if "editcustomer" in request.POST:
+
+            customer.name = request.POST["name"]
+            customer.number = request.POST["number"]
+
+            inventoryid = request.POST["inventory_purchased"]
+            customer.inventory_purchased = get_object_or_404(Stock, id=inventoryid)
+
+            customer.quantity = request.POST["quantity"]
+
+            inventory = Stock.objects.get(id=inventoryid)
+            if int(customer.quantity) < inventory.quantity:
+                inventory.quantity -= int(customer.quantity)
+                inventory.save()
+
+                customer.amount = request.POST["amount"]
+                customer.balance = inventory.price * int(customer.quantity) - int(customer.amount) * int(
+                    customer.quantity)
+                customer.addedby = request.user
+                customer.save()
+
+                messages.warning(request, 'Customer updated Successfully!!')
+                return redirect('index')
+            else:
+                messages.warning(request, 'Not enough inventory in stock, please contact Administrator')
+                return redirect('index')
+
+    context = {'customer': customer, 'inventorys': inventorys}
 
     return render(request, 'customer_detail.html', )
 

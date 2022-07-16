@@ -15,7 +15,10 @@ urlpatterns = [
      path('cash/', views.cash, name='cash'),
      path('payable/', views.payable, name='payable'),
      path('transfer/', views.transfer, name='transfer'),
+     path('writecheque/<int:pk>', views.Writecheques_detail, name='writecheque'),
      # path('receipts/', views.Receipts, name='receipts'),
+
+     path('customerdetail/<int:pk>', views.Customerdetailfunc, name='customerdetail'),
      path('invoicepaymentdetail/<int:pk>',views.Receivepayment_detail, name='invoicepaymentdetail'),
      # path('paymentreceipt/', views.paymentReceipt, name='paymentreceipt'),
      path('statistics/', views.statistics, name='statistics'),

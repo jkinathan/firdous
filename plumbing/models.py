@@ -224,7 +224,7 @@ class Cheques(models.Model):
     # chequeId = random.randint(1, 900000000)
     chooseAccount = models.CharField(default='sj', max_length=20, choices=shopOptions)
     expenseName = models.CharField(max_length=150)
-    expenseCost =  models.FloatField()
+    expenseCost = models.FloatField()
     expenseQuantity = models.IntegerField(default=1,null=False)
     totalAmountPaid = models.FloatField()
     # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
