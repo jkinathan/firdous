@@ -1,11 +1,18 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load currency %}
 {% block content %}
-<div id="page-wrapper">
+<div id="page-wrapper" class="model-print">
     <div class="container-fluid">
         <div class="row bg-title">
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                <h4 class="page-title">Customer Detail</h4> 
+                <h4 class="page-title">Customer Detail</h4>
+
+                <button type="submit" class="btn btn-warning">
+                    <li>
+                        <a href="{% url 'customers' %}" class="waves-effect"><i class="fa fa-users fa-fw" aria-hidden="true"></i>Customers</a>
+                    </li>
+                </button>
             </div>
         </div>
         <div class="row">
@@ -16,20 +23,20 @@
                     <form action="{% url 'customerdetail' customer.id %}" method="POST">
                     {% csrf_token %}
                         <div class="form-group">
-                            <label for="name">Customer Name:</label>
-                            <input type="text" class="form-control" id="name" placeholder="{{ customer.customerName }}" name="name" value="{{ customer.name }}">
+                            <label for="name">Full Name:</label>
+                            <input type="text" class="form-control" id="name" placeholder="{{ customer.customerName }}" name="name" value="{{ customer.customerName }}">
                         </div>
                         <div class="form-group">
-                            <label for="name">Contact:</label>
-                            <input type="text" class="form-control" id="number" placeholder="{{ customer.contact }}" name="number" value="{{ customer.number }}">
+                            <label for="name">Telephone Number:</label>
+                            <input type="text" class="form-control" id="number" placeholder="{{ customer.contact }}" name="number" value="{{ customer.contact }}">
                         </div>
 
                         <div class="form-group">
                             <label for="inventorys">Item Purchased:</label>
                             <select class="selectpicker form-control" id="inventory_purchased" name="inventory_purchased">
                                 <option value="{{ customer.item_purchased.id }}" selected="selected">{{ customer.item_purchased  }}</option>
-                                {% for invent in stocks %}
-                                <option value="{{ invent.id }}">{{ invent.inventoryPart }}</option>
+                                {% for invent in inventorys %}
+                                <option value="{{ invent.id }}">{{ invent.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -40,12 +47,12 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="amount">Total Amount Paid:</label>
-                            <input type="text" class="form-control" id="amount" placeholder="{{ customer.totalAmountPaid }}" name="totalAmountPaid" value="{{ customer.totalAmountPaid }}">
+                            <label for="amount">Amount Paid:</label>
+                            <input type="text" class="form-control" id="amount" placeholder="{{ customer.totalAmountPaid|currency:request.session.currency }} {{ request.session.currency }}" name="amount" value="{{ customer.totalAmountPaid|currency:request.session.currency }}{{ request.session.currency  }}">
                         </div>
                         <div class="form-group">
                             <label for="balance">Balance:</label>
-                            <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ customer.balance }}" name="balance" value="{{ customer.balance }}">
+                            <input type="text" class="form-control" id="balance" disabled=True placeholder="{{ customer.balance|currency:request.session.currency }} {{ request.session.currency }}" name="balance" value="{{ customer.balance|currency:request.session.currency }} {{ request.session.currency}}">
                         </div>
                         <div class="form-group">
                             <label for="modofpayment">Mode of Payment:</label>
@@ -67,7 +74,7 @@
                             
                         </div>
                         
-                        <button type="submit" name="editcustomer" class="btn btn-warning">Update</button>
+                        <button onclick="window.print();" class="btn btn-warning">Print</button>
                     </form>
                 </div>
             </div>

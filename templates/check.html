@@ -28,6 +28,7 @@
                                 <th>Total Paid</th>
                                 <th>Balance</th>
                                 <th>Date</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,7 +43,11 @@
                                 <td>{{ inv.totalAmountPaid |currency:request.session.currency }} {{ request.session.currency }}</td>
                                 <td>{{ inv.balance |currency:request.session.currency }} {{ request.session.currency }}</td>
                                 <td>{{ inv.date }}</td>
-
+                                <td>
+                                    <button type="submit" class="btn btn-primary">
+                                        <a href="{% url 'writecheque' inv.pk %}" style="color: white;">Detail Page</a>
+                                    </button>
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>

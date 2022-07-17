@@ -28,6 +28,8 @@
                                 <th>Account</th>
                                 <th>Balance</th>
                                 <th>Status</th>
+
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,7 +48,12 @@
                                 {% else %}
                                     <td style="color:red">{{ inv.status }}</td>
                                 {% endif %}
-                                
+                                <td>
+                                    <button type="submit" class="btn btn-primary">
+                                        <a href="{% url 'transferdetail' inv.pk %}" style="color: white;">Detail Page</a>
+                                    </button>
+                                </td>
+
                             </tr>
                         {% endfor %}
                         </tbody>

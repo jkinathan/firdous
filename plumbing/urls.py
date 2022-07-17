@@ -17,7 +17,13 @@ urlpatterns = [
      path('cash/', views.cash, name='cash'),
      path('payable/', views.payable, name='payable'),
      path('transfer/', views.transfer, name='transfer'),
+     path('writecheque/<int:pk>', views.Writecheques_detail, name='writecheque'),
+     path('transferdetail/<int:pk>', views.Transferdetail, name='transferdetail'),
+
+     path('payabledetail/<int:pk>', views.Payabledetail, name='payabledetail'),
      # path('receipts/', views.Receipts, name='receipts'),
+
+     path('customerdetail/<int:pk>', views.Customerdetailfunc, name='customerdetail'),
      path('invoicepaymentdetail/<int:pk>',views.Receivepayment_detail, name='invoicepaymentdetail'),
      # path('paymentreceipt/', views.paymentReceipt, name='paymentreceipt'),
      path('statistics/', views.statistics, name='statistics'),
@@ -26,6 +32,12 @@ urlpatterns = [
      path('purchase/', views.purchase, name='purchase'),
      path('check/', views.check, name='check'),
      path('reportstemp/', views.Reportsview, name='reportstemp'),
+     # Reports
+     path('purchase-report/', views.PurchaseReport, name='purchase-report'),
+     path('expense-report/', views.ExpenseReport, name='expense-report'),
+     path('stock-report/', views.StockReport, name='stock-report'),
+     path('sales-report/', views.SalesReport, name='sales-report'),
+     path('profitloss-report/', views.ProfitLossReport, name='profitloss-report'),
      # path('enterbills/', views.enterbills, name='enterbills'),
      # path('paybills/', views.paybills, name='paybills'),
      #path('technicians/', views.technician, name='technicians'),
