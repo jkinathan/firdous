@@ -151,9 +151,7 @@
                     <li>
                         <a href="{% url 'customers' %}" class="waves-effect"><i class="fa fa-users fa-fw" aria-hidden="true"></i>Customers</a>
                     </li>
-                    <li>
-                        <a href="{% url 'receipts' %}" class="waves-effect"><i class="fa fa-users fa-fw" aria-hidden="true"></i>Receipts</a>
-                    </li>
+
                     {% comment %} <li>
                         <a href="{% url 'createcustomer' %}"class="waves-effect"><i class="fa fa-table fa-fw" aria-hidden="true"></i>Add Customer</a>
                     </li> {% endcomment %}
@@ -165,15 +163,7 @@
                         <a href="{% url 'cash' %}" class="waves-effect"><i class="fa fa-bank fa-fw" aria-hidden="true"></i>Cash Invoice</a>
                     </li>
 
-                    <li>
-                        <a href="{% url 'cashreceipt' %}" class="waves-effect"><i class="fa fa-bank fa-fw" aria-hidden="true"></i>Cash Receipt</a>
-                    </li>
-                     <li>
-                        <a href="{% url 'invoicereceipt' %}" class="waves-effect"><i class="fa fa-bank fa-fw" aria-hidden="true"></i>Invoice Receipt</a>
-                    </li>
-                     <li>
-                        <a href="{% url 'paymentreceipt' %}" class="waves-effect"><i class="fa fa-bank fa-fw" aria-hidden="true"></i>Payment Receipt</a>
-                    </li>
+
                     <li>
                         <a href="{% url 'purchase' %}" class="waves-effect"><i class="fa fa-buysellads fa-fw" aria-hidden="true"></i>Purchase Order</a>
                     </li>
@@ -186,6 +176,19 @@
                     </li>
                     <li>
                         <a href="{% url 'check' %}" class="waves-effect"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Write Cheques</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'reportstemp' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Reports</a>
+                        <ul>
+                            <li>
+                               <a href="{% url 'profitloss-report' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Profit and Loss Report</a>
+                                <a href="{% url 'purchase-report' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Purchase Report</a>
+                                <a href="{% url 'sales-report' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Sales Report</a>
+                                <a href="{% url 'stock-report' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Stock Report</a>
+                                <a href="{% url 'expense-report' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Expense Report</a>
+                            </li>
+                        </ul>
                     </li>
 
                    

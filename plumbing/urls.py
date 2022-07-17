@@ -4,7 +4,9 @@ from . import views
 urlpatterns = [
      path('',views.index,name='index'),
      path('customers',views.customers,name='customers'),
-     #path('dashboard/', views.dashboard, name='dashboard'),
+     path('dashboard/salesReport', views.dashboard, name='salesReport'),
+     path('dashboard/profitReport', views.profitReport, name='profitReport'),
+
      #path('api/data', views.get_data, name='api_data'),
      #path('api/chart/data', ChartData.as_view(), name='chart_data'),
 
@@ -15,15 +17,27 @@ urlpatterns = [
      path('cash/', views.cash, name='cash'),
      path('payable/', views.payable, name='payable'),
      path('transfer/', views.transfer, name='transfer'),
-     path('cashreceipt/', views.cashReceipt, name='cashreceipt'),
-     path('receipts/', views.Receipts, name='receipts'),
-     path('invoicereceipt/', views.invoiceReceipt, name='invoicereceipt'),
-     path('paymentreceipt/', views.paymentReceipt, name='paymentreceipt'),
+     path('writecheque/<int:pk>', views.Writecheques_detail, name='writecheque'),
+     path('transferdetail/<int:pk>', views.Transferdetail, name='transferdetail'),
+
+     path('payabledetail/<int:pk>', views.Payabledetail, name='payabledetail'),
+     # path('receipts/', views.Receipts, name='receipts'),
+
+     path('customerdetail/<int:pk>', views.Customerdetailfunc, name='customerdetail'),
+     path('invoicepaymentdetail/<int:pk>',views.Receivepayment_detail, name='invoicepaymentdetail'),
+     # path('paymentreceipt/', views.paymentReceipt, name='paymentreceipt'),
      path('statistics/', views.statistics, name='statistics'),
      # path('credit/', views.credit, name='credit'),
      # path('receive/', views.receive, name='receive'),
      path('purchase/', views.purchase, name='purchase'),
      path('check/', views.check, name='check'),
+     path('reportstemp/', views.Reportsview, name='reportstemp'),
+     # Reports
+     path('purchase-report/', views.PurchaseReport, name='purchase-report'),
+     path('expense-report/', views.ExpenseReport, name='expense-report'),
+     path('stock-report/', views.StockReport, name='stock-report'),
+     path('sales-report/', views.SalesReport, name='sales-report'),
+     path('profitloss-report/', views.ProfitLossReport, name='profitloss-report'),
      # path('enterbills/', views.enterbills, name='enterbills'),
      # path('paybills/', views.paybills, name='paybills'),
      #path('technicians/', views.technician, name='technicians'),

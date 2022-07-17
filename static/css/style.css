@@ -10,6 +10,7 @@
         addrow *{
             visibility: hidden;
         }
+
                 
         .model-print, .model-print * {
             visibility: visible;
@@ -22,6 +23,9 @@
         }
         #addrowp{
             visibility: hidden;
+        }
+        #page-wrapper {
+            visibility: visible;
         }
 
     }
