@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load currency %}
+{% load humanize %}
+{% block content %}
+<script>
+    var URL = "{% url 'customers' %}"
+</script>
+<script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
+
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row bg-title">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title">Profit and Loss Report</h4> </div>
+
+        </div>
+
+
+        <!-- /.row -->
+        <div class="row">
+           <div class="col-md-12 col-lg-12 col-sm-12">
+                <div class="white-box">
+
+                    <h3 class="box-title">Please Enter Valid Information</h3>
+                    <table class="table table-striped table-bordered dt-responsive nowrap">
+                        <tr>
+                            <th>Select Date</th>
+                                <td>
+                                    <select>
+                                        <option>May 30, 2022 - June 28, 2022</option>
+                                        <option>Today</option>
+                                        <option>Yesterday</option>
+                                        <option>This Week</option>
+                                        <option>Last Week</option>
+                                        <option>This month</option>
+                                        <option>Last Month</option>
+                                    </select>
+                                </td>
+                        </tr>
+                    </table>
+                    <table id="example" class="table table-striped table-bordered dt-responsive nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Opening Stock</th>
+                                <td>3000000</td>
+                                </tr>
+                                <tr>
+                                <th>Total Purchase</th>
+                                <td>300000</td>
+                                    </tr>
+                                <tr>
+                                <th>Expenses</th>
+                                <td>6000</td>
+                                    </tr>
+                                <tr>
+                                <th>Paid Amount</th>
+                                <td>400000</td>
+                                    </tr>
+                                <tr>
+                                <th>Purchase Due</th>
+                                <td>405000</td>
+                                    </tr>
+                                <tr>
+                                <th>Gross Profit</th>
+                                <td>50000</td>
+                                    </tr>
+                                <tr>
+                                <th>Net Profit</th>
+                                <td>48000</td>
+                            </tr>
+                        </thead>
+<!--                        <tbody>-->
+<!--                            <tr>-->
+<!--                                <td></td>-->
+<!--                                <td></td>-->
+<!--                                <td></td>-->
+<!--                                <td></td>-->
+<!--                                <td></td>-->
+<!--                                <td></td>-->
+<!--                                <td></td>-->
+<!--                            </tr>-->
+<!--                        </tbody>-->
+                    </table>
+                    <button>Print Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
