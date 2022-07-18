@@ -8,8 +8,27 @@ from django.urls import reverse
 from django.db.models.signals import post_save
 from datetime import datetime
 from django.utils.formats import localize
+import uuid
+import string
+import random
+from currencies.models import Currency
 # Create your models here.
 
+
+class Account(models.Model):
+    name = models.CharField(max_length=200)
+    cashAccount =  models.FloatField()
+    bankAccount =  models.FloatField()
+    debtorBalance =  models.FloatField()
+    accountBalance =  models.FloatField()
+    expensesTotal =  models.FloatField()
+    grandTotal =  models.FloatField()
+    cashFromReceipts =  models.FloatField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return (self.name)
 
 class Vendor(models.Model):
     name = models.CharField(max_length=200)
@@ -29,12 +48,12 @@ class Stock(models.Model):
     inventoryImage = models.ImageField(null=True, blank=True,upload_to='images/')
     description = models.TextField(blank=True)
     # unitMeasure = models.CharField(max_length=100, choices=measure,blank=True)
-    cartonQuantity = models.IntegerField(default=1, blank=True)
+    # cartonQuantity = models.IntegerField(default=1, blank=True)
     piecesQuantity = models.IntegerField(default=1, blank=True)
     costPrice = models.FloatField()
     sellingPrice = models.FloatField()
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
     percentageProfit = models.CharField(max_length=150, blank=True)
-    stockValue = models.CharField(max_length=150)
     # quantity = models.IntegerField()
     vendorSupplied = models.ForeignKey(Vendor, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -82,8 +101,9 @@ class Customer(models.Model):
     contact = models.CharField(max_length=150, blank=True)
     item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1,null=False)
-    totalAmountPaid = models.FloatField()
-    balance = models.FloatField()
+    totalAmountPaid = models.FloatField(default=0.00)
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
+    balance = models.FloatField(default=0.00)
     order_status = models.CharField(max_length=20, choices=MY_CHOICES)
     modeOfPayment = models.CharField(max_length=100, choices=paymentMode)
     purchased_From = models.CharField(default='sj', max_length=20, choices=shopOptions)
@@ -95,7 +115,7 @@ class Customer(models.Model):
     def calculate_balance(self):
         balance = (self.item_purchased.sellingPrice*self.quantity - self.totalAmountPaid) 
         return balance
-    
+               
     # Updating Order Status
     def update_Order_status(self):
         if(self.balance < 0.5):
@@ -119,11 +139,14 @@ class Customer(models.Model):
             # formatted_datetime = formats.date_format(date.today(), "%Y-%m-%d")
             return datetime.now().strftime("%Y-%m-%d") > self.due_date.strftime("%Y-%m-%d")
 
-    # Saving percentageProfit
+    # Saving Changes
     def save(self,*args, **kwargs):
         self.balance = self.calculate_balance()
         self.order_status = self.update_Order_status()
         self.update_Due_Date = self.update_Due_Date()
+
+        self.item_purchased.piecesQuantity -= self.quantity
+        self.item_purchased.save()
         super().save(*args, **kwargs)
     
     def __str__(self):
@@ -136,3 +159,151 @@ class ExchangeRate(models.Model):
 
     def __str__(self):
         return self.currencyName
+
+class CashInvoice(models.Model):
+
+    paymentMode = (
+        ('Bank', 'Bank'),
+        ('Cash', 'Cash'),
+    )
+
+    customerName = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    receiptNumber = models.CharField(max_length=150)
+    modeOfPayment = models.CharField(max_length=100, choices=paymentMode, default='Cash')
+    item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1,null=False)
+    totalAmountPaid = models.FloatField()
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
+    balance = models.FloatField()
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+
+    # Calcuting balance
+    def calculate_balance(self):
+        balance = (self.item_purchased.sellingPrice*self.quantity - self.totalAmountPaid) 
+        return balance
+    
+    # Saving changes
+    def save(self,*args, **kwargs):
+        self.balance = self.calculate_balance()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.customerName)
+
+class PurchaseOrder(models.Model):
+    vendorName = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=1,null=False)
+    totalAmountPaid = models.FloatField()
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
+    balance = models.FloatField()
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+
+    # Calcuting balance
+    def calculate_balance(self):
+        balance = (self.item_purchased.sellingPrice*self.quantity - self.totalAmountPaid) 
+        return balance
+    
+    # Saving changes
+    def save(self,*args, **kwargs):
+        self.balance = self.calculate_balance()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.vendorName)
+
+class Cheques(models.Model):
+
+    shopOptions = (
+        ('firdous', 'firdous'),
+        ('sj', 'sj'),
+    )
+
+    # chequeId = random.randint(1, 900000000)
+    chooseAccount = models.CharField(default='sj', max_length=20, choices=shopOptions)
+    expenseName = models.CharField(max_length=150)
+    expenseCost = models.FloatField()
+    expenseQuantity = models.IntegerField(default=1,null=False)
+    totalAmountPaid = models.FloatField()
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
+    balance = models.FloatField(default=0.0)
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+    class Meta:
+        ordering = ["-expenseName"]
+        verbose_name = 'Cheque'
+        verbose_name_plural = 'Cheques' 
+        
+    # Calcuting balance
+    def calculate_balance(self):
+        balance = (self.expenseCost*self.expenseQuantity - self.totalAmountPaid) 
+        return balance
+
+    def save(self,*args, **kwargs):
+        self.balance = self.calculate_balance()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return 'C-'+str(self.pk)
+
+
+class Payable(models.Model):
+    
+    vendorSupplied = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    item_supplied = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    amountToPay = models.FloatField()
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+    def __str__(self):
+        return str(self.vendorSupplied)
+
+class Transfer(models.Model):
+    paymentMode = (
+        ('Bank', 'Bank'),
+        ('Cash', 'Cash'),
+    )
+    account = (
+        ('firdous', 'firdous'),
+        ('sj', 'sj'),
+    )
+    MY_CHOICES = (
+            ('Complete', 'Complete'),
+            ('Pending', 'Pending'),
+            ('Incomplete', 'Incomplete'),
+        )
+    # InvoiceNumber = random.randint(1, 900000000)
+    vendor = models.ForeignKey(Payable, on_delete=models.CASCADE)
+    modeOfPayment = models.CharField(max_length=100, choices=paymentMode,default='Cash')
+    amountPaid = models.FloatField(default=0.00)
+    # currency = models.ForeignKey(Currency, on_delete=models.CASCADE, null=True, blank=True)
+    chooseAccount = models.CharField(max_length=200, choices=account,default='sj')
+    Balance = models.FloatField(default=0.00)
+    status = models.CharField(max_length=20, choices=MY_CHOICES,default='Pending')
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+    # Calcuting balance
+    def calculate_balance(self):
+        Balance = (self.vendor.amountToPay - self.amountPaid) 
+        return Balance
+
+    # Updating Order Status
+    def update_status(self):
+        if(self.Balance < 0.5):
+            status = 'Complete'
+        else:
+            status = 'Pending'
+        return status
+
+    # Saving changes
+    def save(self,*args, **kwargs):
+        self.Balance = self.calculate_balance()
+        self.status = self.update_status()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.vendor)
+
+

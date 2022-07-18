@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+{% load currency %}
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,7 +24,9 @@
     {% comment %} <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> {% endcomment %}
     <link href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.datatables.net/responsive/2.2.5/css/responsive.bootstrap.min.css" rel="stylesheet">
- 
+    
+    {% comment %} Chart js {% endcomment %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
@@ -73,7 +76,7 @@
                             <!--This is dark logo icon-->
                             {% comment %} <img src="{% static 'plugins/images/admin-logo.png' %}" alt="home" class="dark-logo" /> {% endcomment %}
                             <!--This is light logo icon-->
-                            <img src="{% static 'images/firdous.jpg' %}" alt="home" class="light-logo" style="height:50px;" />
+                            <img src="{% static 'images/sj-profile.jpg' %}" alt="home" class="light-logo" style="height:50px;" />
                         </b>
                         <!-- Logo text image you can use text also -->
                         <span style="color: green;font-weight: bold;">
@@ -89,16 +92,28 @@
                     <li>
                         <a class="nav-toggler open-close waves-effect waves-light hidden-md hidden-lg" href="javascript:void(0)"><i class="fa fa-bars"></i></a>
                     </li>
-                    <li>
-                        <form role="search" class="app-search hidden-sm hidden-xs m-r-10">
-                            <input type="text" placeholder="Search..." class="form-control"> 
-                            <a href="">
-                                <i class="fa fa-search"></i>
-                            </a> 
+                    <li class="dropdown default-dropdown">
+
+
+                        <form id="currency_switcher" method="POST" action="{% url 'selectcurrency' %}">
+                            {% csrf_token %}
+                            <select name="currency" onchange="submit()" >
+                                {% for curr in CURRENCIES %}
+                                    <option value="{{ curr.code }}"
+                                            {% if curr.code == request.session.currency %}selected="selected"{% endif %}>
+                                        {{ curr.symbol }} {{ curr.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <noscript>
+                                <input type="submit" value="Set" />
+                            </noscript>
+
                         </form>
                     </li>
                     <li>
-                        <a class="profile-pic" href="#"> <img src="{% static '#' %}" alt="user-img" width="36" class="img-circle"><b class="hidden-xs">{{ request.user }}</b></a>
+                        <a class="profile-pic" href="#"> <img src="{% static 'images/sjfr.jpg' %}" alt="user-img" width="36" class="img-circle"><b class="hidden-xs">{{ request.user }}</b></a>
                     </li>
                 </ul>
             </div>
@@ -134,15 +149,49 @@
                     </li>
                     
                     <li>
-                        <a href="{% url 'index' %}" class="waves-effect"><i class="fa fa-table fa-fw" aria-hidden="true"></i>Customers</a>
+                        <a href="{% url 'customers' %}" class="waves-effect"><i class="fa fa-users fa-fw" aria-hidden="true"></i>Customers</a>
                     </li>
+
                     {% comment %} <li>
                         <a href="{% url 'createcustomer' %}"class="waves-effect"><i class="fa fa-table fa-fw" aria-hidden="true"></i>Add Customer</a>
                     </li> {% endcomment %}
                     </li>
                     <li>
-                        <a href="{% url 'stocks' %}" class="waves-effect"><i class="fa fa-font fa-fw" aria-hidden="true"></i>Stocks</a>
+                        <a href="{% url 'stocks' %}" class="waves-effect"><i class="fa fa-book fa-fw" aria-hidden="true"></i>Stocks</a>
                     </li>
+                    <li>
+                        <a href="{% url 'cash' %}" class="waves-effect"><i class="fa fa-bank fa-fw" aria-hidden="true"></i>Cash Invoice</a>
+                    </li>
+
+
+                    <li>
+                        <a href="{% url 'purchase' %}" class="waves-effect"><i class="fa fa-buysellads fa-fw" aria-hidden="true"></i>Purchase Order</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'payable' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Payable</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'transfer' %}" class="waves-effect"><i class="fa fa-credit-card fa-fw" aria-hidden="true"></i>Transfer</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'check' %}" class="waves-effect"><i class="fa fa-money fa-fw" aria-hidden="true"></i>Write Cheques</a>
+                    </li>
+
+                    <li>
+                        <a href="{% url 'reportstemp' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Reports</a>
+                        <ul>
+                            <li>
+                               <a href="{% url 'profitloss-report' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Profit and Loss Report</a>
+                                <a href="{% url 'purchase-report' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Purchase Report</a>
+                                <a href="{% url 'sales-report' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Sales Report</a>
+                                <a href="{% url 'stock-report' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Stock Report</a>
+                                <a href="{% url 'expense-report' %}" class="waves-effect"><i class="fa fa-calculator fa-fw" aria-hidden="true"></i>Expense Report</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                   
                     {% comment %} <li>
                         <a href="{% url 'workorders' %}" class="waves-effect"><i class="fa fa-globe fa-fw" aria-hidden="true"></i>Work Orders</a>
                     </li>
@@ -161,7 +210,7 @@
                         <a href="{% url 'technicians' %}" class="waves-effect"><i class="fa fa-wrench fa-fw" aria-hidden="true"></i>Technicians</a>
                     </li> {% endcomment %}
                     <li>
-                        <a href="{% url 'account_logout' %}" class="waves-effect"><i class="fa fa-user fa-fw" aria-hidden="true"></i>Log out</a>
+                        <a href="{% url 'account_logout' %}" class="waves-effect"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i>Log out</a>
                     </li>
                 </ul>
                
