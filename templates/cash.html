@@ -113,13 +113,11 @@
                                                     &nbsp;
                                                 </td>
                                                 <td colspan="5" style="text-align: left;">
-                                                    <button onclick="addItem();" class="btn btn-sm btn-success" value="Add Row"><i class="fa fa-plus"></i>Add Row</button>
+                                                    <button onclick="addItem();" class="btn btn-sm btn-success" id="sspusd1" value="Add Row"><i class="fa fa-plus"></i>Add Row</button>
                                                 </td>
-
-                                                <td colspan="5" style="text-align: left;">
+                                                <td colspan="5" style="text-align: left;">    
                                                     <button onclick="myConverter();" id="sspusd" class="btn btn-sm btn-success" value="0">Convert-To-USD</button>
                                                 </td>
-
                                             </tr>
                                         </tbody>
                                     </table>
@@ -181,7 +179,25 @@
     function confirmPrint() {
         var proceed = confirm("Are you sure you want to print?");
         if (proceed) {
-            window.print();
+            //total = total;
+            var data = {
+                'Receipttotal':document.getElementById("amountDue").innerText,
+                'convertedValue': document.getElementById('sspusd').value,
+                'csrfmiddlewaretoken': window.CSRF_TOKEN
+            };
+            
+            $.post(URL,data,function(response){
+                if(response === 'success'){
+                    alert('Total Successfully added to Cash Account');
+                    
+                    window.print();
+                }
+                else{
+                    alert('There was an error submitting the data');
+                }
+            });
+            
+            //window.print();
         } else {
         //don't proceed
         }
@@ -226,20 +242,26 @@
 
           }
 
-
-
-    function calculateRow(row) {
-        var price = +row.find('input[name^="price"]').val();
-
-        console.log(price);
-    }
-
-    function calculateGrandTotal() {
-        var grandTotal = 0;
-        $("table.order-list").find('input[name^="price"]').each(function () {
-            grandTotal += +$(this).val();
-        });
-        $("#grandtotal").text(grandTotal.toFixed(2));
-    }
+        function myConverter() {
+            let convtotal = 0;
+            
+            let sspRate = {{ curr }};
+            
+            
+            var tblRows2 = document.getElementById("addItems").getElementsByTagName('tr');
+            
+            for (var i = 0; i < tblRows2.length; i++) {
+                let lineTotal = tblRows2[i].getElementsByTagName('td')[3].getElementsByTagName('input')[0].value;
+                convertedValue = lineTotal / sspRate;
+                tblRows2[i].getElementsByTagName('td')[3].getElementsByTagName('input')[0].value = convertedValue.toFixed(2);
+                convtotal = convtotal + Number(convertedValue)
+            }
+            
+            document.getElementById("amountDue").innerText = convtotal.toFixed(2) ;
+            document.getElementById("currencyy").innerText = ": USD"
+            document.getElementById('sspusd').disabled = true;
+            document.getElementById('sspusd1').disabled = true;
+            document.getElementById('sspusd').value = 1;
+        }
 </script>
 {% endblock %}

@@ -347,20 +347,31 @@ def inventory(request):
 
 @login_required
 def cash(request):
-    # cash = CashInvoice.objects.all()
-
-    # context ={'cash':cash
-    #           }
+    curry = Currency.objects.filter(code='SSP')
+    for currr in curry:
+        curr = currr.factor
     if request.method == 'POST':
         if 'Receipttotal' in request.POST:
             Receipttot = request.POST['Receipttotal']
-
+            convertedValue = request.POST['convertedValue'] 
             # accounts = Account.objects.filter(name='SJ & Firdous').order_by('-id')[0]
 
             try:
                 acc = Account.objects.get(name='SJ & Firdous')
-                acc.cashFromReceipts += float(Receipttot)
-                acc.save()
+                
+                print(convertedValue)
+                if convertedValue == '1':
+                    finValue = float(Receipttot) * float(curr)
+                    
+                    acc.cashFromReceipts += float(finValue)
+                    
+                    print(acc.cashFromReceipts)
+                    acc.save()
+                else:
+                    acc.cashFromReceipts += float(Receipttot)
+                    
+                    print(acc.cashFromReceipts)
+                    acc.save()
                 print(acc.cashFromReceipts)
                 return HttpResponse('success')
             except Account.DoesNotExist:
@@ -378,7 +389,8 @@ def cash(request):
                    'customercount': customercount,
                    'stockscount': stockscount,
                    'vendorcount': vendorcount,
-                   'cash': cash
+                   'cash': cash,
+                   'curr':curr,
                    }
     # customers = Customer.objects.filter(addedby=request.user)
     cash = CashInvoice.objects.all()
@@ -388,7 +400,8 @@ def cash(request):
 
     context = {'cash': cash,
                'stocks': stocks,
-               'customercount': customercount
+               'customercount': customercount,
+               'curr':curr,
                }
 
     for stock in stocks:
