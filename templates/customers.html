@@ -307,8 +307,8 @@
       function addItem() {
         renumber++;
         var html = "<tr>";
-            
-            html  += "<td><select class='form-control'>{% for stock in stocks %}<option class='dropdown-item' value='{{stock.inventoryPart}}'>{{stock.inventoryPart}}</option>{% endfor %}</select></td>";
+            html  += "<td><input type='text' id='#' class='form-control' placeholder='enter item'/></td>";
+<!--            html  += "<td><select class='form-control'>{% for stock in stocks %}<option class='dropdown-item' value='{{stock.inventoryPart}}'>{{stock.inventoryPart}}</option>{% endfor %}</select></td>";-->
             html  += "<td><input type='number' class='form-control' onblur='lineTotal(this);' value='0' name='quantity[]'/></td>";
             html  += "<td><input type='text' class='form-control' onblur='lineTotal(this);' value='0' name='price[]'/></td>";
             html  += "<td><input type='text' id='lineTotal' class='form-control' value='0' disabled name='total[]' /></td>";
