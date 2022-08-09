@@ -6,6 +6,8 @@ urlpatterns = [
      path('customers',views.customers,name='customers'),
      path('dashboard/salesReport', views.dashboard, name='salesReport'),
      path('dashboard/profitReport', views.profitReport, name='profitReport'),
+     path('customer/Receipt', views.customerReceipt, name='customerReceipt'),
+
 
      #path('api/data', views.get_data, name='api_data'),
      #path('api/chart/data', ChartData.as_view(), name='chart_data'),

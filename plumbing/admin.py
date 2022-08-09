@@ -26,6 +26,9 @@ class ChequesAdmin(admin.ModelAdmin):
 class TransferAdmin(admin.ModelAdmin):
     readonly_fields = ['Balance','status']
 
+class CustomerReceiptAdmin(admin.ModelAdmin):
+    list_display = ['receiptNumber','customerName']
+
 admin.site.register(Vendor),
 admin.site.register(Stock,StockAdmin),
 admin.site.register(Customer, CustomerAdmin),
@@ -34,6 +37,7 @@ admin.site.register(CashInvoice, CashInvoiceAdmin),
 admin.site.register(PurchaseOrder, PurchaseOrderAdmin),
 admin.site.register(Cheques,ChequesAdmin),
 admin.site.register(Payable),
+admin.site.register(CustomerReceipt,CustomerReceiptAdmin),
 admin.site.register(Account,AccountAdmin),
 admin.site.register(Transfer,TransferAdmin),
 

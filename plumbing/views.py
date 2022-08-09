@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # from reportlab.pdfgen import canvas
 # from reportlab.lib.units import inch
 # from reportlab.lib.pagesizes import letter
-from .models import Account, Customer, Payable,Stock, Transfer,Vendor,Cheques, CashInvoice,PurchaseOrder
+from .models import CustomerReceipt, Account, Customer, Payable,Stock, Transfer,Vendor,Cheques, CashInvoice,PurchaseOrder
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import date
@@ -256,6 +256,46 @@ def index(request):
         
     return render(request,'index.html',context)
 
+# New
+def customerReceipt(request):
+    stocks = Stock.objects.all()
+    if request.method == 'POST':
+        if 'sender' in request.POST:
+            
+            try:
+                receiptNumber = request.POST.get('chequeNo')
+                customerName= request.POST.get('customerName')
+                modeOfPayment= request.POST.get('modeOfPayment')
+                item_purchased= request.POST.get('ice-cream-choice1')+"--"+request.POST.get('ice-cream-choice2')+"--"+request.POST.get('ice-cream-choice3')+"--"+request.POST.get('ice-cream-choice4')+request.POST.get('ice-cream-choice5')
+                # item = get_object_or_404(Stock, inventoryPart=item_purchased)
+                purchasedFrom= request.POST.get('purchasedFrom')
+                quantity= request.POST.get('quantity1')+"--"+request.POST.get('quantity2')+"--"+request.POST.get('quantity3')+"--"+request.POST.get('quantity4')+"--"+request.POST.get('quantity5')
+                price= request.POST.get('price1')+"--"+request.POST.get('price2')+"--"+request.POST.get('price3')+"--"+request.POST.get('price4')+"--"+request.POST.get('price5')
+                discount= request.POST.get('discount1')+"--"+request.POST.get('discount2')+"--"+request.POST.get('discount3')+"--"+request.POST.get('discount4')+"--"+request.POST.get('discount5')
+                totalAmountPaid= request.POST.get('totalAmountPaid1')+"--"+request.POST.get('totalAmountPaid2')+"--"+request.POST.get('totalAmountPaid3')+"--"+request.POST.get('totalAmountPaid4')+"--"+request.POST.get('totalAmountPaid5')
+                date= request.POST.get('date')
+                
+                CustomerReceipt.objects.create(
+                    receiptNumber=receiptNumber,
+                    customerName=customerName,
+                    modeOfPayment=modeOfPayment,
+                    item_purchased=item_purchased,
+                    purchasedFrom=purchasedFrom,
+                    quantity=quantity,
+                    price=price,
+                    discount=discount,
+                    totalAmountPaid=totalAmountPaid,
+                    date=date,
+                    )
+            except CustomerReceipt.DoesNotExist:
+                return HttpResponse('Fail') 
+    context = {
+        'loopdata': [1,2,3,4,5],
+        'stocks':stocks,
+        }
+    return render(request,'customerReceipt.html',context)
+
+
 def customers(request):
     curry = Currency.objects.filter(code='SSP')
     for currr in curry:
@@ -264,30 +304,51 @@ def customers(request):
         if 'Receipttotal' in request.POST:
             Receipttot = request.POST['Receipttotal'] 
             convertedValue = request.POST['convertedValue'] 
-            # accounts = Account.objects.filter(name='SJ & Firdous').order_by('-id')[0]
+            # cr = CustomerReceipt()
 
             try:
+                receiptNumber = request.POST.get('chequeNo')
+                customerName= request.POST.get('customerName')
+                modeOfPayment= request.POST.get('modeOfPayment')
+                item_purchased= request.POST.get('ice-cream-choice')
+                item = get_object_or_404(Stock, inventoryPart=item_purchased)
+                purchasedFrom= request.POST.get('purchasedFrom')
+                quantity= request.POST.get('quantity')
+                price= request.POST.get('price')
+                totalAmountPaid= request.POST.get('totalAmountPaid')
+                date= request.POST.get('date')
+                
+                CustomerReceipt.objects.create(
+                    receiptNumber=receiptNumber,
+                    customerName=customerName,
+                    modeOfPayment=modeOfPayment,
+                    item_purchased=item,
+                    purchasedFrom=purchasedFrom,
+                    quantity=quantity,
+                    price=price,
+                    totalAmountPaid=totalAmountPaid,
+                    date=date,
+                    ) 
+                
+
                 acc = Account.objects.get(name='SJ & Firdous')
                 
-                print(convertedValue)
                 if convertedValue == '1':
                     finValue = float(Receipttot) * float(curr)
                     
                     acc.cashFromReceipts += float(finValue)
                     
-                    print(acc.cashFromReceipts)
-                    acc.save()
+                    # acc.save()
                 else:
                     acc.cashFromReceipts += float(Receipttot)
                     
-                    print(acc.cashFromReceipts)
-                    acc.save()
-                print(acc.cashFromReceipts)
+                    # acc.save()
                 return HttpResponse('success')
             except Account.DoesNotExist:
                 return HttpResponse('Fail')
-            
+               
         return HttpResponse('Fail')
+
 
     if request.user.is_staff:
         customers = Customer.objects.all()
@@ -304,7 +365,7 @@ def customers(request):
               }
     # customers = Customer.objects.filter(addedby=request.user)
     customers = Customer.objects.all()
-    # print(customers)
+    stocks = Stock.objects.all()
     
     customercount = Customer.objects.all().count()
     
