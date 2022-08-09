@@ -314,32 +314,27 @@ class CustomerReceipt(models.Model):
     receiptNumber = models.CharField(max_length=150)
     customerName = models.CharField(max_length=150)
     modeOfPayment = models.CharField(max_length=100,default='Cash')
-    item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    item_purchased = models.CharField(max_length=250)
     purchasedFrom = models.CharField(max_length=150, blank=True,default=0)
-    quantity = models.IntegerField(default=1,null=False)
+    quantity =  models.CharField(max_length=150, blank=True,default=0)
     price = models.CharField(max_length=150, blank=True,default=0)
-    discount = models.FloatField(default=0.0)
-    totalAmountPaid = models.FloatField()
-    AmountAfterDiscount = models.FloatField()
-    balance = models.FloatField()
+    discount =  models.CharField(max_length=150, blank=True,default=0)
+    totalAmountPaid =  models.CharField(max_length=150, blank=True,default=0)
+    # AmountAfterDiscount = models.FloatField()
+    balance = models.CharField(max_length=150, blank=True,default=0)
+
     date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
 
 
-    # Calcuting balance
-    def calculate_balance(self):
-        balance = ((self.item_purchased.sellingPrice*float(self.quantity)) - float(self.totalAmountPaid)) 
-        return balance
-
-    # Calcuting discount
-    def calculate_discount(self):
-        mydiscount = ((self.discount/100)*(self.item_purchased.sellingPrice*float(self.quantity)))
-        AmountAfterDiscount = ((self.item_purchased.sellingPrice*float(self.quantity)) - mydiscount)
-        return AmountAfterDiscount
+    # # Calcuting discount
+    # def calculate_discount(self):
+    #     mydiscount = ((self.discount/100)*(self.item_purchased.sellingPrice*float(self.quantity)))
+    #     AmountAfterDiscount = ((self.item_purchased.sellingPrice*float(self.quantity)) - mydiscount)
+    #     return AmountAfterDiscount
     
     # Saving changes
     def save(self,*args, **kwargs):
-        self.balance = self.calculate_balance()
-        self.AmountAfterDiscount = self.calculate_discount()
+        # self.AmountAfterDiscount = self.calculate_discount()
         super().save(*args, **kwargs)
 
     def __str__(self):
