@@ -1,4 +1,5 @@
 from asyncio.windows_events import NULL
+from email.policy import default
 from pyexpat import model
 from django.db import models
 from django.utils import timezone
@@ -307,3 +308,39 @@ class Transfer(models.Model):
         return str(self.vendor)
 
 
+# Receipt model
+class CustomerReceipt(models.Model):
+
+    receiptNumber = models.CharField(max_length=150)
+    customerName = models.CharField(max_length=150)
+    modeOfPayment = models.CharField(max_length=100,default='Cash')
+    item_purchased = models.ForeignKey(Stock, on_delete=models.CASCADE)
+    purchasedFrom = models.CharField(max_length=150, blank=True,default=0)
+    quantity = models.IntegerField(default=1,null=False)
+    price = models.CharField(max_length=150, blank=True,default=0)
+    discount = models.FloatField(default=0.0)
+    totalAmountPaid = models.FloatField()
+    AmountAfterDiscount = models.FloatField()
+    balance = models.FloatField()
+    date = models.DateField(default=timezone.now().strftime("%Y-%m-%d"))
+
+
+    # Calcuting balance
+    def calculate_balance(self):
+        balance = ((self.item_purchased.sellingPrice*float(self.quantity)) - float(self.totalAmountPaid)) 
+        return balance
+
+    # Calcuting discount
+    def calculate_discount(self):
+        mydiscount = ((self.discount/100)*(self.item_purchased.sellingPrice*float(self.quantity)))
+        AmountAfterDiscount = ((self.item_purchased.sellingPrice*float(self.quantity)) - mydiscount)
+        return AmountAfterDiscount
+    
+    # Saving changes
+    def save(self,*args, **kwargs):
+        self.balance = self.calculate_balance()
+        self.AmountAfterDiscount = self.calculate_discount()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return str(self.receiptNumber)

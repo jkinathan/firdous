@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # from reportlab.pdfgen import canvas
 # from reportlab.lib.units import inch
 # from reportlab.lib.pagesizes import letter
-from .models import Account, Customer, Payable,Stock, Transfer,Vendor,Cheques, CashInvoice,PurchaseOrder
+from .models import CustomerReceipt, Account, Customer, Payable,Stock, Transfer,Vendor,Cheques, CashInvoice,PurchaseOrder
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from datetime import date
@@ -256,6 +256,15 @@ def index(request):
         
     return render(request,'index.html',context)
 
+# New
+def customerReceipt(request):
+    stocks = Stock.objects.all()
+    context = {
+        'stocks':stocks,
+        }
+    return render(request,'customerReceipt.html',context)
+
+
 def customers(request):
     curry = Currency.objects.filter(code='SSP')
     for currr in curry:
@@ -264,30 +273,63 @@ def customers(request):
         if 'Receipttotal' in request.POST:
             Receipttot = request.POST['Receipttotal'] 
             convertedValue = request.POST['convertedValue'] 
-            # accounts = Account.objects.filter(name='SJ & Firdous').order_by('-id')[0]
+            # cr = CustomerReceipt()
 
             try:
+                receiptNumber = request.POST.get('chequeNo')
+                customerName= request.POST.get('customerName')
+                modeOfPayment= request.POST.get('modeOfPayment')
+                item_purchased= request.POST.get('ice-cream-choice')
+                item = get_object_or_404(Stock, inventoryPart=item_purchased)
+                purchasedFrom= request.POST.get('purchasedFrom')
+                quantity= request.POST.get('quantity')
+                price= request.POST.get('price')
+                totalAmountPaid= request.POST.get('totalAmountPaid')
+                date= request.POST.get('date')
+                print("------ID------")
+                print(receiptNumber)
+                CustomerReceipt.objects.create(
+                    receiptNumber=receiptNumber,
+                    customerName=customerName,
+                    modeOfPayment=modeOfPayment,
+                    item_purchased=item,
+                    purchasedFrom=purchasedFrom,
+                    quantity=quantity,
+                    price=price,
+                    totalAmountPaid=totalAmountPaid,
+                    date=date,
+                    ) 
+                # cr.receiptNumber= request.POST.get('chequeNo')
+                # cr.customerName= request.POST.get('customername')
+                # cr.modeOfPayment= request.POST.get('modeOfPayment')
+                # cr.item_purchased= request.POST.get('ice-cream-choice')
+                # cr.purchasedFrom= request.POST.get('purchasedFrom')
+                # cr.quantity= request.POST.get('quantity')
+                # cr.price= request.POST.get('price')
+                # # cr.discount= 0
+                # cr.totalAmountPaid= request.POST.get('total')
+                # cr.date= request.POST.get('Date')
+                
+                # cr.save()
+
                 acc = Account.objects.get(name='SJ & Firdous')
                 
-                print(convertedValue)
                 if convertedValue == '1':
                     finValue = float(Receipttot) * float(curr)
                     
                     acc.cashFromReceipts += float(finValue)
                     
-                    print(acc.cashFromReceipts)
-                    acc.save()
+                    # acc.save()
                 else:
                     acc.cashFromReceipts += float(Receipttot)
                     
-                    print(acc.cashFromReceipts)
-                    acc.save()
-                print(acc.cashFromReceipts)
+                    # acc.save()
                 return HttpResponse('success')
             except Account.DoesNotExist:
                 return HttpResponse('Fail')
-            
+               
         return HttpResponse('Fail')
+
 
     if request.user.is_staff:
         customers = Customer.objects.all()
@@ -304,7 +346,7 @@ def customers(request):
               }
     # customers = Customer.objects.filter(addedby=request.user)
     customers = Customer.objects.all()
-    # print(customers)
+    stocks = Stock.objects.all()
     
     customercount = Customer.objects.all().count()
     
