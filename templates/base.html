@@ -102,9 +102,9 @@
 
                         <form id="currency_switcher" method="POST" action="{% url 'selectcurrency' %}">
                             {% csrf_token %}
-                            <select name="currency" onchange="submit()" >
+                            <select name="currency" onchange="submit()" class="currencyselect">          <!--  I removed onchange="submit() from this line"-->
                                 {% for curr in CURRENCIES %}
-                                    <option value="{{ curr.code }}"
+                                    <option value="{{curr.code }}" class="curr{{curr.code}} currency"
                                             {% if curr.code == request.session.currency %}selected="selected"{% endif %}>
                                         {{ curr.symbol }} {{ curr.name }}
                                     </option>
@@ -112,7 +112,7 @@
                             </select>
 
                             <noscript>
-                                <input type="submit" value="Set" />
+                                <input type="submit" value="Set" class="currsubmit" />
                             </noscript>
 
                         </form>

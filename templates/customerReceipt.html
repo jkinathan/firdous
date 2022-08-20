@@ -104,14 +104,146 @@
                                 
 
                                 {% for i in loopdata %}
-                                <tr>
-                                    <td><input list='stock-items' id='ice-cream-choice' name='ice-cream-choice{{i}}' class='form-control'/></td>
-                                    <datalist id='stock-items'>{% for stock in stocks %}<option class='form-control' value='{{stock.inventoryPart}}'> <span>Price:{{ stock.sellingPrice }}</span> {% endfor %}</datalist>
-                                    <td><input type='number' class='form-control' value='' id='quantity{{i}}' min='0' placeholder='quantity' name='quantity{{i}}'/></td>
-                                    <td><input type='number' class='form-control' value='' id='price' min='0' placeholder='price' name='price{{i}}'/></td>
-                                    <td><input type='number' class='form-control' value='' id='discount' min='0' placeholder='% discount' name='discount{{i}}'/></td>
-                                    <td><input type='number' id='lineTotal' class='form-control' value='' min='0' placeholder='total paid' name='totalAmountPaid{{i}}' /></td>    
+                                <tr id="rowitem">
+                                    <td><input list='stock-items{{i}}' id='ice-cream-choice' name='ice-cream-choice{{i}}' class='form-control ice-cream-choice{{i}} '/></td>
+                                    <datalist id='stock-items{{i}}' class='stock-items ice-cream-choice{{i}}'>{% for stock in stocks %}<option class='form-control options ice-cream-choice{{i}} ' value='{{stock.inventoryPart}} ' label='{{stock.sellingPrice}}' >  {% endfor %}</datalist>
+                                    <td><input type='number' class='form-control  quantity{{i}}' value='' id='quantity{{i}}' min='0' placeholder='quantity' name='quantity{{i}}'/></td>
+                                    <td><input type='number' class='form-control  price{{i}}' value='' id='price{{i}}}' min='0' placeholder='price' name='price{{i}}'/></td>
+                                    <td><input type='number' class='form-control discount{{i}}' value='' id='discount{{i}}' min='0' placeholder='% discount' name='discount{{i}}'/></td>
+                                    <td><input type='number' id='lineTotal{{i}}  ' class='form-control  lineTotal{{i}}' value='' min='0' placeholder='total paid' name='totalAmountPaid{{i}}' /></td>    
                                 </tr>
+                                 
+                                <script>
+
+                                    $( document ).ready(function() {
+                                       //var inputfieldVal = $('#chequeNo').val();
+                                       var  randoncheqno  =  Math.floor(1000 + Math.random() * 9000);
+                                       $('#chequeNo').val(randoncheqno);
+                                       no  ;
+                                    });
+
+                                    $(function(){
+
+                                        $(".quantity{{i}},.price{{i}},.discount{{i}}, .lineTotal{{i}} ").bind('click keyup',function(){
+                                                
+                                        //line_Total;
+                                        var lineTotal = 0;
+                                        var grandTotal = 0;
+                                        var originalDiscount  = 0;
+
+                                        var x = Number($(".quantity{{i}}").val());
+                                        var y = Number($(".price{{i}}").val());
+                                        var lineTotal = x * y;
+                                        $(".lineTotal{{i}}").val(lineTotal);
+
+                                        
+                                        //Grand Total
+                                        var savegrandtotal = Number($(".lineTotal{{1}}").val() + $(".lineTotal{{2}}").val() + $(".lineTotal{{3}}").val() + $(".lineTotal{{4}}").val() + $(".lineTotal{{5}}").val());
+                                        var grandTotal =  savegrandtotal;
+                                        $(".amountDue").val(grandTotal);
+
+
+                                        // Discount
+                                        
+                                        var disc =  Number($(".discount{{i}}").val());
+                                        if( disc != 0){
+                                        
+                                        var price    = Number($(".price{{i}}").val());
+                                        var quantity = Number($(".quantity{{i}}").val());
+                                        var dec = (disc / 100).toFixed(2);
+                                        var product = Number(price  * dec);
+                                        
+                                        var discount = Number(price) - Number(product) ;
+                                        
+                                        $(".lineTotal{{i}}").val(discount * quantity);
+                                        
+                                        // New Grandtotal after applying a dicount
+                                        var newgrandTotal = Number($(".lineTotal{{1}}").val()) + Number($(".lineTotal{{2}}").val()) + Number($(".lineTotal{{3}}").val()) + Number($(".lineTotal{{4}}").val()) + Number($(".lineTotal{{5}}").val());
+                                        $(".amountDue").val(newgrandTotal);
+
+                                        }else{
+                                                
+                                            }
+
+                                     });
+
+                                //Currency Converter to USD
+
+                                        $('.converttousd').click(function(){
+                                          //e.preventDefault();
+                                
+                                        var  usdValue = {{curr}} ; 
+                                
+
+                                        var getPrice     = $(".price{{i}}").val();
+                                        var getlineTotal = $(".lineTotal{{i}}").val();
+                                        var getgrandTotal = $(".amountDue").val();
+
+                                    
+                                        var setprice      = parseFloat(getPrice / usdValue).toFixed(2);
+                                        var setlineTotal  = parseFloat(getlineTotal / usdValue).toFixed(2);
+                                        var setgrandTotal =  parseFloat($(".lineTotal{{1}}").val() + $(".lineTotal{{2}}").val() + $(".lineTotal{{3}}").val() + $(".lineTotal{{4}}").val() + $(".lineTotal{{5}}").val()).toFixed(2) ;
+                                        //setgrandTotal.toFixed(2);
+
+                                        Number($(".price{{i}}").val(setprice ));
+                                        Number($(".lineTotal{{i}}").val( setlineTotal ));
+                                        Number($(".amountDue").val(setgrandTotal));
+
+                                        $(this).addClass("disabled");
+
+                                        });
+                            7
+
+                                //Function that fills Price when Item is chosen FROM DATALIST
+
+                                       $(".ice-cream-choice{{i}}").on('change', function () { 
+                                           var inputValue = $(this).val();  
+                                           var optionPrice = $("#stock-items{{i}}").find("option").attr("label");
+
+                                           
+                                           
+                                          
+                                            if($('datalist').find("option[label='{{stock.sellingPrice}}']").filter(function(){  
+                                           
+                                           return $(this).val() == inputValue;  
+                                            //return $(this).find("opti4 on").attr("label") ;  
+                                            //return optionPrice;
+                                            })  ) {       
+                                            // your code as per need    
+                                            // alert(this.value); 
+
+                                           
+                                           // if($(this).parent(".ice-cream-choice{{i}}")){
+                                            
+                                           
+                                            
+                                           //}
+                                            //optionprice.hasClass("optionprice{{stock.sellingPrice}}");
+                                          
+                                            
+
+                                            console.log( inputValue);
+                                           
+                                            
+                                            
+                                             }
+                                             console.log(String(optionPrice));
+
+                                            });
+
+                                            
+                                            
+
+
+
+
+                                    });
+
+                                    
+                                </script>
+
+
+
                                 {% endfor %}
                                 
                                 
@@ -127,7 +259,7 @@
                                     <td></td>
                                     <td></td>
                                     <td> &nbsp;
-                                        <span id="amountDue" value="0.00">0.00</span>
+                                        <span  value=""><input class="amountDue" value=''></input></span>
                                         <span id="currencyy" value="">: SSP</span>
                                         {% comment %} <input type="text" name="grandtotal" id="amountDue" disabled class="form-control"> {% endcomment %}
                                         &nbsp;
@@ -141,10 +273,13 @@
 
                     <!-- Modal footer -->
                     <div class="modal-footer">
+                        <button type="button"    id="converttousd " class="converttousd btn btn-primary">Convert to USD</button>
                         <button onclick ="confirmPrint();" id="addrowp">Print Me</button>
                         <button type="submit" name="sender" class="btn btn-primary">Send Data</button></a>
                     </div>
                 </form>
+                
+                
                 </div>
             </div>
         </div>
@@ -163,5 +298,10 @@
         }
         //don't proceed
     }
+      
+
+   
+
+
 </script>
 {% endblock content %}

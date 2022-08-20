@@ -1,4 +1,4 @@
-from asyncio.windows_events import NULL
+# from asyncio.windows_events import None
 from locale import currency
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect
@@ -250,7 +250,7 @@ def index(request):
             return render(request, 'index.html', context)
     
     for customer in customers:
-        if customer.is_past_due and customer.due_date != NULL:
+        if customer.is_past_due and customer.due_date != None:
             messages.warning(request, customer.customerName+'\'s due date of '+customer.due_date.strftime("%Y-%m-%d")+ ' is past, please follow up and update!!')
             return render(request, 'index.html', context)
         
@@ -258,6 +258,9 @@ def index(request):
 
 # New
 def customerReceipt(request):
+    curry = Currency.objects.filter(code='SSP')
+    for currr in curry:
+        curr = currr.factor
     stocks = Stock.objects.all()
     if request.method == 'POST':
         if 'sender' in request.POST:
@@ -275,6 +278,11 @@ def customerReceipt(request):
                 totalAmountPaid= request.POST.get('totalAmountPaid1')+"--"+request.POST.get('totalAmountPaid2')+"--"+request.POST.get('totalAmountPaid3')+"--"+request.POST.get('totalAmountPaid4')+"--"+request.POST.get('totalAmountPaid5')
                 date= request.POST.get('date')
                 
+                # st1 = request.POST.get('ice-cream-choice1')
+                # Stock.objects.filter(inventoryPart='Padlocks').update( piecesQuantity - float(request.POST.get('quantity1')))
+
+                # print(st1)
+
                 CustomerReceipt.objects.create(
                     receiptNumber=receiptNumber,
                     customerName=customerName,
@@ -292,6 +300,7 @@ def customerReceipt(request):
     context = {
         'loopdata': [1,2,3,4,5],
         'stocks':stocks,
+        'curr':curr,
         }
     return render(request,'customerReceipt.html',context)
 
@@ -384,7 +393,7 @@ def customers(request):
     
     for customer in customers:
         # if (customer.due_date )
-        if customer.is_past_due and customer.due_date != NULL:
+        if customer.is_past_due and customer.due_date != None:
             messages.warning(request, customer.customerName+'\'s due date of '+customer.due_date.strftime("%Y-%m-%d")+ ' is past, please follow up and update!!')
             return render(request, 'customers.html', context)
         
@@ -474,7 +483,7 @@ def cash(request):
 
     # for customer in customers:
     #     # if (customer.due_date )
-    #     if customer.is_past_due and customer.due_date != NULL:
+    #     if customer.is_past_due and customer.due_date != None:
     #         messages.warning(request, customer.customerName + '\'s due date of ' + customer.due_date.strftime(
     #             "%Y-%m-%d") + ' is past, please follow up and update!!')
     #         return render(request, 'customers.html', context)

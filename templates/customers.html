@@ -239,7 +239,7 @@
                     
                     window.print();
                 }
-                else{
+                else{None
                     alert('There was an error submitting the data');
                 }
             });
@@ -276,7 +276,7 @@
             html  += "<td><input type='text' class='form-control' onblur='lineTotal(this);' value='0' id='price' name='price[]'/></td>";
             html  += "<td><input type='text' id='lineTotal' class='form-control' value='0' disabled name='total[]' /></td>";
 
-            html += "</tr>";
+            html += "</tr>";  var mainRow = elem.parentElement.parentElement;
             document.getElementById("addItems").insertRow().innerHTML = html;
         };
     
