@@ -138,7 +138,7 @@
 
                                         
                                         //Grand Total
-                                        var savegrandtotal = Number($(".lineTotal{{1}}").val() + $(".lineTotal{{2}}").val() + $(".lineTotal{{3}}").val() + $(".lineTotal{{4}}").val() + $(".lineTotal{{5}}").val());
+                                        var savegrandtotal = Number($(".lineTotal{{1}}").val()) + Number($(".lineTotal{{2}}").val()) + Number($(".lineTotal{{3}}").val()) + Number($(".lineTotal{{4}}").val()) + Number($(".lineTotal{{5}}").val());
                                         var grandTotal =  savegrandtotal;
                                         $(".amountDue").val(grandTotal);
 
@@ -182,12 +182,12 @@
                                     
                                         var setprice      = parseFloat(getPrice / usdValue).toFixed(2);
                                         var setlineTotal  = parseFloat(getlineTotal / usdValue).toFixed(2);
-                                        var setgrandTotal =  parseFloat($(".lineTotal{{1}}").val() + $(".lineTotal{{2}}").val() + $(".lineTotal{{3}}").val() + $(".lineTotal{{4}}").val() + $(".lineTotal{{5}}").val()).toFixed(2) ;
+                                        var setgrandTotal = Number($(".lineTotal{{1}}").val()) + Number($(".lineTotal{{2}}").val()) + Number($(".lineTotal{{3}}").val()) + Number($(".lineTotal{{4}}").val()) + Number($(".lineTotal{{5}}").val());
                                         //setgrandTotal.toFixed(2);
 
                                         Number($(".price{{i}}").val(setprice ));
                                         Number($(".lineTotal{{i}}").val( setlineTotal ));
-                                        Number($(".amountDue").val(setgrandTotal));
+                                        Number($(".amountDue").val(setgrandTotal.toFixed(2)));
 
                                         $(this).addClass("disabled");
 
