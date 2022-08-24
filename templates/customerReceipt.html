@@ -41,7 +41,7 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <table class="table table-striped">
-                        <form method="POST" action="">
+                        <form method="POST" action="" id="rform">
                             {% csrf_token %}
                         <thead>
                             <tr>
@@ -119,7 +119,13 @@
                                        //var inputfieldVal = $('#chequeNo').val();
                                        var  randoncheqno  =  Math.floor(1000 + Math.random() * 9000);
                                        $('#chequeNo').val(randoncheqno);
-                                       no  ;
+                                      var curr = $('.curr{{curr.code}}').val();
+                                        if(curr=='US Dollar'){
+                                            $('.converttousd').addClass("disabled");
+
+                                        }
+
+                                        
                                     });
 
                                     $(function(){
@@ -190,6 +196,7 @@
                                         Number($(".amountDue").val(setgrandTotal.toFixed(2)));
 
                                         $(this).addClass("disabled");
+                                        $('.converttousd').addClass("disabled");
 
                                         });
                             7
@@ -233,8 +240,10 @@
 
                                             
                                             
-
-
+                                          
+                                            $(".printbtn").click(function(){
+                                                $('.sendbtn').trigger('submit');
+                                            });
 
 
                                     });
@@ -274,8 +283,8 @@
                     <!-- Modal footer -->
                     <div class="modal-footer">
                         <button type="button"    id="converttousd " class="converttousd btn btn-primary">Convert to USD</button>
-                        <button onclick ="confirmPrint();" id="addrowp">Print Me</button>
-                        <button type="submit" name="sender" class="btn btn-primary">Send Data</button></a>
+                        <button type="button"  onclick ="confirmPrint();" id="addrowp" class"printbtn">Print Me</button>
+                        <button type="submit"  id="sendbtn" name="sender" class="btn btn-primary sendbtn ">Send Data</button></a>
                     </div>
                 </form>
                 
@@ -288,15 +297,23 @@
 
 <script>
     function confirmPrint() {
+        //document.getElementById('rform').submit();
+        
         var proceed = confirm("Are you sure you want to print?");
         if (proceed) {
-            
+           // $('.sendbtn').click();
+            //document.getElementById('sendbtn').submit();
             window.print();
+            document.getElementById('sendbtn').click();
+           
         }
         else{
             alert('There was an error submitting the data');
         }
+        
+        
         //don't proceed
+        
     }
       
 
